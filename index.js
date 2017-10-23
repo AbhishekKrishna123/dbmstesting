@@ -68,49 +68,9 @@ app.post('/login', urlEncodedParser, function(request, response){
     console.log(request.body.username + " : USN\n\n" + request.body.password + " : password\n\n");
 
     var login = require('./login.js');
-<<<<<<< HEAD
-    login.Login(connection, body, response);
-
-    // console.log("isAuth value = " + isAuth);
-
-    // if (isAuth == 1){
-    //     response.sendFile("authorised.html", { root: path.join(__dirname, 'templates') });
-    // } else {
-    //     response.sendFile("unauthorised.html", { root: path.join(__dirname, 'templates') });
-    // }
-    // connection.query("SELECT * FROM USERS WHERE USERNAME = '" + body.username + "'", function(err, res, fields){
-
-    //     console.log(res);
-
-    //     if(res.length == 0) {
-    //         console.log("Error 1");
-    //         console.log(res);
-    //         response.sendFile("unauthorised.html", { root: path.join(__dirname, 'templates') });
-    //     } else {
-    //         //console.log("1." + typeof(body.password));
-    //         //console.log("2." + typeof(res[0].password));
-
-    //         //bcrypt.compare(body.password, res[0].password, function(err, res) {
-    //         if(body.password == res[0].password){
-    //             //console.log("COMPARE RES: \n\n" + res);
-
-    //             //if(res) {
-
-    //             console.log("authorised user");
-    //             response.sendFile("authorised.html", { root: path.join(__dirname, 'templates') });
-    //             //}
-    //         } else {
-    //                 console.log("Error 2");
-    //                 console.log("not an authorised user");
-    //                 response.sendFile("unauthorised.html", { root: path.join(__dirname, 'templates') });
-    //         }
-    //     }
-    // });
-=======
 
     login.Login(connection, request, response);
 
->>>>>>> remotes/origin/dubby
 });
 
 
