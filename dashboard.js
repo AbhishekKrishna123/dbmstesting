@@ -48,7 +48,7 @@ module.exports =
             });
         }
 
-        else
+        else if (role == 2)//faculty
         {
             connection.query("SELECT * FROM FACULTY WHERE FACULTYID = '" + req.session.username + "'", function(err, res, fields){
 
@@ -60,14 +60,22 @@ module.exports =
                     response.sendFile("unauthorised.html", { root: path.join(__dirname, 'templates') });
                     //return 0;
                 } else {
-                    
-                    response.render('dashboard_notstu', {
-                        ID: res[0].FacultyID,
-                        FirstName: res[0].FirstName,
-                        LastName: res[0].LastName,
-                        EmailID: res[0].EmailID,
-                        MobileNumber: res[0].MobileNumber,
-                        Department: res[0].DepartmentID
+
+                    var dept;
+                    connection.query("SELECT * FROM DEPARTMENT WHERE DEPARTMENTID = '" + res[0].DepartmentID + "';", function(errid, resid){
+                        
+                        if(errid) throw errid;
+                        else dept = resid[0].Name;
+
+                        response.render('dashboard_notstu', {
+                            ID: res[0].FacultyID,
+                            //FirstName: res[0].FirstName,
+                            //LastName: res[0].LastName,
+                            Name: res[0].Name,
+                            EmailID: res[0].EmailID,
+                            MobileNumber: res[0].MobileNumber,
+                            Department: dept
+                        });
                     });
                 }
             });
