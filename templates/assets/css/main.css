@@ -2006,6 +2006,7 @@
 	input[type="password"],
 	input[type="email"],
 	input[type="date"],
+	input[type="time"],
 	select,
 	textarea {
 		-moz-appearance: none;
@@ -2027,6 +2028,7 @@
 		input[type="password"]:invalid,
 		input[type="email"]:invalid,
 		input[type="date"]:invalid,
+		input[type="time"]:invalid,
 		select:invalid,
 		textarea:invalid {
 			box-shadow: none;
@@ -2036,6 +2038,7 @@
 		input[type="password"]:focus,
 		input[type="email"]:focus,
 		input[type="date"]:focus,
+		input[type="time"]:focus,
 		select:focus,
 		textarea:focus {
 			border-color: #e89980;
@@ -2079,6 +2082,7 @@
 	input[type="password"],
 	input[type="email"],
 	input[type="date"],
+	input[type="time"],
 	select {
 		height: 3em;
 	}

@@ -114,6 +114,47 @@ app.post('/password_change', urlEncodedParser, function (req, res){
 
 });
 
+app.get('/add_company_test', function(req, res){
+
+    var retrieveCompanies;
+
+    connection.query("SELECT * FROM COMPANY", function(err, result){
+
+        console.log("\n\nCOM LIST: " + result[0].Name + "\n\n");
+
+        var companyNames = [];
+        for(var i=0, l=result.length; i<l; i++) {
+
+            companyNames.push(result[i].Name);
+        }
+
+        console.log(companyNames);
+        //var comList = {companies: companyNames};
+        res.render('addCompanyTest', {Companies: companyNames});
+
+    });
+});
+
+app.post('/add_company_test', urlEncodedParser, function(req, res){
+
+    var addCompanyTest = require('./addCompanyTest.js');
+
+    var body = req.body;
+    var companyName = body.companyname;
+
+    console.log("FORM CNAME = " + companyName);
+
+    connection.query("SELECT * FROM COMPANY WHERE NAME LIKE '" + companyName + "%';", function(error, result){
+        if (error) throw error;
+        else
+        {
+            console.log(result);
+            var companyID = result[0].CompanyID;
+            addCompanyTest.addTest(req, res, connection, companyID);
+        }
+    });
+});
+
 
 app.get('/logout', function(req, res){
     req.session.destroy();

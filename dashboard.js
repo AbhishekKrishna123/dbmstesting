@@ -67,7 +67,7 @@ module.exports =
                         if(errid) throw errid;
                         else dept = resid[0].Name;
 
-                        response.render('dashboard_notstu', {
+                        response.render('dashboard_fac', {
                             ID: res[0].FacultyID,
                             //FirstName: res[0].FirstName,
                             //LastName: res[0].LastName,
@@ -80,5 +80,6 @@ module.exports =
                 }
             });
         }
+
     }
 }
