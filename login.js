@@ -21,24 +21,22 @@ module.exports =
             if(res.length == 0) {
                 console.log("Error 1");
                 console.log(res);
-                response.sendFile("unauthorised.html", { root: path.join(__dirname, 'templates') });
+                //response.sendFile("unauthorised.html", { root: path.join(__dirname, 'templates') });
+                response.redirect('/#');
                 //return 0;
             } else {
                 if(request.body.password == res[0].password){
-                    console.log("authorised user no error");
+                    //console.log("authorised user no error");
 
                     request.session.username = request.body.username;
-                    //request.session.FirstName = res[0].FirstName;
-                    //request.session.LastName = res[0].LastName;
                     request.session.role = res[0].role;
                     response.redirect('/dashboard');
 
                     //}
                 } else {
-                        console.log("Error 2");
-                        console.log("not an authorised user");
-                        //return 0;
-                        response.sendFile("unauthorised.html", { root: path.join(__dirname, 'templates') });
+                        //console.log("Error 2");
+                        //console.log("not an authorised user");
+                        response.redirect("/#");
                 }
             }
         });
