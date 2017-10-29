@@ -17,6 +17,7 @@ module.exports =
             USN : body.usn,
             FirstName: body.fname,
             LastName: body.lname,
+            Department: body.department,
             DOB: body.dob,
             MobileNumber: body.mobile,
             EmailID: body.email,

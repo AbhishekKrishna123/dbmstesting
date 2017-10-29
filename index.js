@@ -73,18 +73,44 @@ app.post('/login', urlEncodedParser, function(request, response){
 
 
 app.get('/register', function(req, res){
-    res.sendFile('register.html', { root: path.join(__dirname, 'templates') });
+    //res.sendFile('register.html', { root: path.join(__dirname, 'templates') });
+    connection.query("SELECT * FROM DEPARTMENT;", function(error, result){
+        if (error)
+        {
+            throw error;
+        }
+
+        else
+        {
+
+            res.render('register', {Departments: result});
+        }
+    });
+    //res.render('/register')
 });
 
 app.get('/dashboard', function(req, res) {
     if (req.session.username) {
         //res.render('dashboard', { name: req.session.FirstName, USN: req.session.USN });
 
-        var dashboard = require("./dashboard.js");
-        dashboard.Dashboard(connection, req, res);
+        
+        var q = "SELECT * FROM DEPARTMENT WHERE DEPARTMENTID IN (SELECT DEPARTMENT FROM STUDENT WHERE USN = '" + req.session.username + "');";
+        connection.query(q, function(error, result){
+            if(error)
+            {
+                throw error;
+            }
+            else
+            {
+                console.log(result[0].Name);
+                var dashboard = require("./dashboard.js");
+                dashboard.Dashboard(connection, req, res, result[0].Name);
+            }
+        });
 
     }
     else {
+
         res.redirect('/');
     }
 

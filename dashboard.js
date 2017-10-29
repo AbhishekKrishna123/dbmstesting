@@ -10,7 +10,7 @@ var mysql = require("mysql");
 
 module.exports =
 {
-    Dashboard : function(connection, req, response)
+    Dashboard : function(connection, req, response, dept)
     {
         var role = req.session.role;
         //console.log("USER ROLE: ", role);
@@ -49,12 +49,6 @@ module.exports =
 
                                 else
                                 {
-                                    //console.log("DATE FORMAT " + result_notreg[0].TestDate.getUTCYear());
-                                    // response.render('dashboard_stu', {
-                                    //     Details: res[0],
-                                    //     RegTests: result_reg,
-                                    //     UnregTests: result_notreg
-                                    // });
                                     var testq_notelig = "SELECT * FROM TEST WHERE CUTOFFGPA >  '" + res[0].CGPA + "';";
                                     connection.query(testq_notelig, function(error_notelig, result_notelig){
                                         if(error_notelig)
@@ -66,6 +60,7 @@ module.exports =
                                         {
                                             response.render('dashboard_stu', {
                                                 Details: res[0],
+                                                Department: dept,
                                                 RegTests: result_reg,
                                                 UnregTests: result_notreg,
                                                 IneligibleTests: result_notelig

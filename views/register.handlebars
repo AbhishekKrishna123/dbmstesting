@@ -49,9 +49,17 @@
 							</div>
 
 							<div class="row uniform 50%">
-									<div class="12u">
+									<div class="6u 12u(mobilep)">
 										<input type="text" name="mobile" id="mobile" value="" required = "" placeholder="Mobile number" data-validation="number" data-validation-length="10"/>
 									</div>
+									<div class="6u 12u(mobilep)">
+									<select name="department">
+										<option value = ""> Department </option>
+										{{#each Departments}}
+											<option value = {{this.DepartmentID}}> {{this.Name}} </option>
+										{{/each}}
+									</select>
+								</div>		
 							</div>
 
 							<div class="row uniform 50%">
