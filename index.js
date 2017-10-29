@@ -1,29 +1,43 @@
-var bodyParser = require("body-parser");
-var urlEncodedParser = bodyParser.urlencoded({extended: false});
-
-var session = require('express-session');
-
-var cookieParser = require('cookie-parser');
-
-var path = require("path");
-
 var express = require("express");
 var app = express();
+
+var bodyParser = require("body-parser");
+var urlEncodedParser = bodyParser.urlencoded({extended: false});
+var path = require("path");
 
 var mysql = require("mysql");
 // connect strings for mysql
 var connection = mysql.createConnection({
-	host: "localhost",
+	host: "127.0.0.1",
 	user: "root",
 	password: "root",
 	database: "dbms"
 });
 
-//console.log(connection);
+var session = require('express-session');
+var MySQLStore = require('express-mysql-session')(session);
+
+var options = {
+    host: '127.0.0.1',
+    port: 3306,
+    user: 'root',
+    password: 'root',
+    database: 'dbms'
+};
+
+var sessionStore = new MySQLStore(options);
+ 
+app.use(session({
+    key: 'session_cookie_name',
+    secret: 'session_cookie_secret',
+    store: sessionStore,
+    resave: false,
+    saveUninitialized: false
+}));
+
 // connecting ......
 connection.connect();
 
-app.use(cookieParser());
 app.use(session({secret: "secret"}));
 
 app.use(bodyParser.text());
@@ -151,6 +165,33 @@ app.post('/add_company_test', urlEncodedParser, function(req, res){
             console.log(result);
             var companyID = result[0].CompanyID;
             addCompanyTest.addTest(req, res, connection, companyID);
+        }
+    });
+});
+
+
+app.post('/testregister', urlEncodedParser, function(req, res){
+
+    console.log("ID" + req.body.ID);
+    var body = req.body;
+
+    var insertVals =
+    {
+        USN: req.session.username,
+        TestID: body.ID
+    }
+
+    connection.query("INSERT INTO REGISTER SET ?", insertVals, function(error, result){
+        if(error)
+        {
+            console.log("ERROR");
+            throw error;
+        }
+
+        else
+        {
+            console.log("TESTREG SUCCESS");
+            res.send({status: 200});
         }
     });
 });

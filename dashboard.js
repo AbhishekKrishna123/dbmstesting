@@ -27,22 +27,21 @@ module.exports =
                     response.sendFile("unauthorised.html", { root: path.join(__dirname, 'templates') });
                     //return 0;
                 } else {
-                    
-                    response.render('dashboard_stu', {
-                        USN: req.session.username,
-                        FirstName: res[0].FirstName,
-                        LastName: res[0].LastName,
-                        EmailID: res[0].EmailID,
-                        MobileNumber: res[0].MobileNumber,
-                        Section: res[0].Section,
-                        Address: res[0].Address,
-                        Gender: res[0].Gender,
-                        DiplomaStudent: res[0].DiplomaStudent,
-                        StudentType: res[0].StudentType,
-                        Semester: res[0].Semester,
-                        CGPA: res[0].CGPA,
-                        Marks10th: res[0].Marks10th,
-                        Marks12th: res[0].Marks12th
+
+                    var testq = "SELECT * FROM TEST WHERE TESTDATE > 2000-01-01";
+
+                    connection.query(testq, function(error, result){
+                        if (error)
+                        {
+                            throw error;
+                        }
+                        else
+                        {
+                            response.render('dashboard_stu', {
+                            Details: res[0],
+                            Tests: result
+                            });
+                        }
                     });
                 }
             });
@@ -63,7 +62,7 @@ module.exports =
 
                     var dept;
                     connection.query("SELECT * FROM DEPARTMENT WHERE DEPARTMENTID = '" + res[0].DepartmentID + "';", function(errid, resid){
-                        
+
                         if(errid) throw errid;
                         else dept = resid[0].Name;
 

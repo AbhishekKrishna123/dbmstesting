@@ -21,13 +21,13 @@
             <div class="nav-wrapper container">
                 <a href="#" class="brand-logo center">Placement System</a>
                 <ul id="nav-mobile" class="right hide-on-med-and-down">
-                    <li><a href="">Logged in as {{USN}}</a></li>
+                    <li><a href="">Logged in as {{Details.USN}}</a></li>
                 </ul>
             </div>
         </nav>
         <section class="container">
             <h1>Dashboard</h1>
-            <h3>Welcome {{FirstName}}!</h3>
+            <h3>Welcome {{Details.FirstName}}!</h3>
         </section>
 
     <section class="container" style="margin-top: 5em">
@@ -50,7 +50,7 @@
                         First Name
                     </td>
                     <td>
-                        {{FirstName}}
+                        {{Details.FirstName}}
                     </td>
                 </tr>
                 <tr>
@@ -58,7 +58,7 @@
                         Last Name
                     </td>
                     <td>
-                        {{LastName}}
+                        {{Details.LastName}}
                     </td>
                 </tr>
                 <tr>
@@ -66,7 +66,7 @@
                         USN
                     </td>
                     <td>
-                        {{USN}}
+                        {{Details.USN}}
                     </td>
                 </tr>
                 <tr>
@@ -74,7 +74,7 @@
                         Email ID
                     </td>
                     <td>
-                        {{EmailID}}
+                        {{Details.EmailID}}
                     </td>
                 </tr>
                 <tr>
@@ -82,7 +82,7 @@
                         Mobile Number
                     </td>
                     <td>
-                        {{MobileNumber}}
+                        {{Details.MobileNumber}}
                     </td>
                 </tr>
                 <tr>
@@ -90,7 +90,7 @@
                         Address
                     </td>
                     <td>
-                        {{Address}}
+                        {{Details.Address}}
                     </td>
                 </tr>
                 <tr>
@@ -98,7 +98,7 @@
                         Gender
                     </td>
                     <td>
-                        {{Gender}}
+                        {{Details.Gender}}
                     </td>
                 </tr>
                 <tr>
@@ -106,7 +106,7 @@
                         Section
                     </td>
                     <td>
-                        {{Section}}
+                        {{Details.Section}}
                     </td>
                 </tr>
                 <tr>
@@ -114,7 +114,7 @@
                         Student Type
                     </td>
                     <td>
-                        {{StudentType}}
+                        {{Details.StudentType}}
                     </td>
                 </tr>
                 <tr>
@@ -122,7 +122,7 @@
                         Diploma
                     </td>
                     <td>
-                        {{DiplomaStudent}}
+                        {{Details.DiplomaStudent}}
                     </td>
                 </tr>
                 <tr>
@@ -130,7 +130,7 @@
                         Semester
                     </td>
                     <td>
-                        {{Semester}}
+                        {{Details.Semester}}
                     </td>
                 </tr>
                 <tr>
@@ -138,7 +138,7 @@
                         CGPA
                     </td>
                     <td>
-                        {{CGPA}}
+                        {{Details.CGPA}}
                     </td>
                 </tr>
             </tbody>
@@ -156,6 +156,43 @@
 
     </section>
 
+    <section class="container" style="margin-top: 5em">
+
+        <h3> Upcoming Tests </h3>
+
+        {{!-- <ul>
+            {{#each Tests}}
+                <li> {{this.Name}} </li>
+            {{/each}}
+        </ul> --}}
+        <table class="bordered highlight ">
+            <thead>
+                <tr>
+                    <th>
+                        Company Name
+                    </th>
+                    <th>
+                        Test Date
+                    </th>
+                    <th>
+                        Test Time
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each Tests}}
+                    <tr>
+                        <td> {{this.Name}} </td>
+                        <td> {{this.TestDate}} </td>
+                        <td> {{this.TestTime}} </td>
+                        <td> <button class="waves-effect waves-light btn blue" onclick = "reg(this)" name = {{this.TestID}}> Register </button> </td>
+                    </tr>
+                {{/each}}
+
+            </tbody>
+        </table>
+    </section>
+
     <br><br>
 
         <script src="js/vendor/modernizr-3.5.0.min.js"></script>
@@ -163,6 +200,34 @@
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-3.2.1.min.js"><\/script>')</script>
         <script src="js/plugins.js"></script>
         <script src="js/main.js"></script>
+
+        <script>
+
+            function reg(obj)
+            {
+                console.log("Function called");
+                var testID = obj.name;
+                $.ajax({
+                    url: '/testregister',
+                    type: "POST",
+                    datatype: "json",
+                    data: {ID: testID},
+
+                    success: function(data)
+                    {
+                        console.log("DATA SENT\n" + data);
+
+                    },
+
+                    error: function(jqXHR, textstatus, err)
+                    {
+                        console.log("ERROR");
+                    }
+
+                });
+            }
+        </script>
+
 
     </body>
 </html>
