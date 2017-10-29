@@ -93,20 +93,27 @@ app.get('/dashboard', function(req, res) {
     if (req.session.username) {
         //res.render('dashboard', { name: req.session.FirstName, USN: req.session.USN });
 
-        
-        var q = "SELECT * FROM DEPARTMENT WHERE DEPARTMENTID IN (SELECT DEPARTMENT FROM STUDENT WHERE USN = '" + req.session.username + "');";
-        connection.query(q, function(error, result){
-            if(error)
-            {
-                throw error;
-            }
-            else
-            {
-                console.log(result[0].Name);
-                var dashboard = require("./dashboard.js");
-                dashboard.Dashboard(connection, req, res, result[0].Name);
-            }
-        });
+        if(req.session.username[0] == '1')
+        {
+            var q = "SELECT * FROM DEPARTMENT WHERE DEPARTMENTID IN (SELECT DEPARTMENT FROM STUDENT WHERE USN = '" + req.session.username + "');";
+            connection.query(q, function(error, result){
+                if(error)
+                {
+                    throw error;
+                }
+                else
+                {
+                    console.log(result[0].DepartmentID);
+                    var dashboard = require("./dashboard.js");
+                    dashboard.Dashboard(connection, req, res, result[0].DepartmentID);
+                }
+            });
+        }
+        else
+        {
+            var dashboard = require("./dashboard.js");
+            dashboard.Dashboard(connection, req, res, '');
+        }
 
     }
     else {

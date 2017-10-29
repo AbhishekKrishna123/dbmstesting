@@ -28,10 +28,10 @@ module.exports =
                     //return 0;
                 } else {
 
-                    var datetime = new Date();
+                    //var datetime = new Date();
                     console.log("GPA" + res[0].CGPA);
-                    var testq_reg = "SELECT * FROM TEST WHERE CUTOFFGPA <=  '" + res[0].CGPA + "' AND TEST.TESTID IN (SELECT TESTID FROM REGISTER WHERE REGISTER.USN = '" + req.session.username + "');";
-                    console.assert("REG" + testq_reg + "\n\n");
+                    var testq_reg = "SELECT * FROM TEST WHERE CUTOFFGPA <=  '" + res[0].CGPA + "' AND TEST.TESTID IN (SELECT TESTID FROM ELIGIBLEDEPARTMENTS WHERE DEPARTMENTID = '" + dept + "') AND TEST.TESTID IN (SELECT TESTID FROM REGISTER WHERE REGISTER.USN = '" + req.session.username + "');";
+                    console.log("REG" + testq_reg + "\n\n");
                     connection.query(testq_reg, function(error_reg, result_reg){
                         if (error_reg)
                         {
@@ -40,7 +40,8 @@ module.exports =
                         else
                         {  
                             //console.log("DATE" + datetime);
-                            var testq_notreg = "SELECT * FROM TEST WHERE CUTOFFGPA <=  '" + res[0].CGPA + "' AND TEST.TESTID NOT IN (SELECT TESTID FROM REGISTER WHERE REGISTER.USN = '" + req.session.username + "');";
+                            //var testq_notreg = "SELECT * FROM TEST WHERE CUTOFFGPA <=  '" + res[0].CGPA + "' AND TEST.TESTID NOT IN (SELECT TESTID FROM REGISTER WHERE REGISTER.USN = '" + req.session.username + "');";
+                            var testq_notreg = "SELECT * FROM TEST WHERE CUTOFFGPA <=  '" + res[0].CGPA + "' AND TEST.TESTID IN (SELECT TESTID FROM ELIGIBLEDEPARTMENTS WHERE DEPARTMENTID = '" + dept + "') AND TEST.TESTID NOT IN (SELECT TESTID FROM REGISTER WHERE REGISTER.USN = '" + req.session.username + "');";
                             connection.query(testq_notreg, function(error_notreg, result_notreg){
                                 if (error_notreg)
                                 {
@@ -49,7 +50,7 @@ module.exports =
 
                                 else
                                 {
-                                    var testq_notelig = "SELECT * FROM TEST WHERE CUTOFFGPA >  '" + res[0].CGPA + "';";
+                                    var testq_notelig = "SELECT * FROM TEST WHERE CUTOFFGPA >  '" + res[0].CGPA + "' AND TEST.TESTID IN (SELECT TESTID FROM ELIGIBLEDEPARTMENTS WHERE DEPARTMENTID = '" + dept + "');";
                                     connection.query(testq_notelig, function(error_notelig, result_notelig){
                                         if(error_notelig)
                                         {
