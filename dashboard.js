@@ -76,7 +76,7 @@ module.exports =
             });
         }
 
-        else if (role == 2)//faculty and spc login
+        else if (role == 2)//faculty login
         {
             connection.query("SELECT * FROM FACULTY WHERE FACULTYID = '" + req.session.username + "'", function(err, res, fields){
 
@@ -109,7 +109,43 @@ module.exports =
             });
         }
 
-        else if (role == 3) // placement cell
+        else if (role == 3) // spc login
+        {
+            //response.render('dashboard_placementcell');
+            connection.query("SELECT * FROM SPC WHERE USERNAME = '" + req.session.username + "';", function(error, result)
+            {
+                if(error)
+                {
+                    throw error;
+                }
+
+                else {
+                    console.log("FOUND SPC, WITH " + result[0]);
+                    var dept;
+                    connection.query("SELECT * FROM DEPARTMENT WHERE DEPARTMENTID = '" + result[0].DepartmentID + "';", function(errid, resid){
+
+                        if(errid) 
+                        {
+                            throw errid;
+                        }
+                        else 
+                        {
+                            dept = resid[0].Name;
+
+                            response.render('dashboard_spc', {
+                                USN: result[0].USN,
+                                Department: dept,
+                                Username: req.session.username 
+
+                            });
+                        }
+                    });
+                }
+
+            });
+        }
+
+        else if(role == 4)
         {
             response.render('dashboard_placementcell');
         }

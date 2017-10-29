@@ -28,28 +28,62 @@
 					<div class="box">
 						<form method="post" action="/add_new_user">
 
-
-							<div class="row uniform 50%">
-								<div class = "6u 12u(mobilep)">
-                                    <input type = "text" name = "username" id = "username" required = "" placeholder = "Username" data-validation="length" data-validation-length="max30"/>
-                                </div>
-                                <div class = "6u 12u(mobilep)">
-                                    <input type = "password" name = "password" id = "password" required = "" placeholder = "Password" data-validation="strength" data-validation-strength="1" />
-                                </div>
-
-                            </div>
-
-
 							<div class="row uniform 50%">
                                 <div class="6u 12u(mobilep)">
                                     <select name = "role">
                                         <option value = ""> Select Role </option>
-                                        <option value = "admin"> Administrator </option>
                                         <option value = "faculty"> Faculty </option> 
                                         <option value = "spc"> SPC </option>
                                     </select>
                                 </div>
+                                
+                                <div class = "6u 12u(mobilep)">
+                                    <input type = "text" name = "username" id = "username" required = "" placeholder = "Username " data-validation="length" data-validation-length="max30"/>
+                                </div>
 							</div>
+
+                            
+
+							<div class="row uniform 50%">
+								<div class = "6u 12u(mobilep)">
+                                    <input type = "text" name = "id" id = "id" required = "" placeholder = "ID (FacultyID / USN) " data-validation="length" data-validation-length="10-10"/>
+                                </div>
+                                <div class = "6u 12u(mobilep)">
+                                    <select name = "department">
+                                        <option value = ""> Department </option>
+                                        {{#each Departments}}
+                                            <option value = {{this.DepartmentID}}> {{this.Name}} </option> 
+                                        {{/each}}
+                                    </select>
+                                </div>
+                            </div>
+
+                        
+
+
+
+							<div class="row uniform 50%">
+								<div class = "6u 12u(mobilep)">
+                                    <input type = "text" name = "name" id = "name" required = "" placeholder = "Name" data-validation="length" data-validation-length="max30"/>
+                                </div>
+                                <div class = "6u 12u(mobilep)">
+                                    <input type = "email" name = "email" id = "email" required = "" placeholder = "Email ID" data-validation="email" />
+                                </div>
+                            </div>
+
+                            <div class="row uniform 50%">
+								<div class = "6u 12u(mobilep)">
+                                    <input type = "text" name = "mobile" id = "mobile" required = "" placeholder = "Mobile Number" data-validation="length" data-validation-length="10-10"/>
+                                </div>
+                            </div>
+
+                             <div class="row uniform 50%">
+								<div class = "6u 12u(mobilep)">
+                                    <input type = "password" name = "password" id = "password" required = "" placeholder = "Password" data-validation="strength" data-validation-strength="1"/>
+                                </div>
+                            </div>
+
+
 
 							<div class="row uniform">
 								<div class="12u">

@@ -286,7 +286,6 @@ app.get('/add_remove_users', function(req, res)
 
 app.post('/remove_user', urlEncodedParser, function(req, res){
 
-    if(req.session.role == 0)
     var body = req.body;
     var del_query = "DELETE FROM USER WHERE USERNAME = '" + body.username + "';";
     connection.query(del_query, function(error, result)
@@ -304,17 +303,33 @@ app.post('/remove_user', urlEncodedParser, function(req, res){
 });
 
 
-app.get('/add_user', function(req, res)
-{
-    res.render('addNewUser');
+app.get('/add_new_user', function(req, res)
+{   
+    if(req.session.username && req.session.role == 0)
+    {
+        connection.query("SELECT * FROM DEPARTMENT", function(error, result)
+        {
+            if(error)
+            {
+                throw error;
+            }
+            else
+            {
+                res.render('addNewUser', {Departments: result});
+            }
+        });
+        
+    }
+    else res.redirect('/');
 });
 
 app.post('/add_new_user', urlEncodedParser, function(req, res)
 {
     var role;
     var body = req.body;
-    if (body.role == "admin") role = 0;
-    else if(body.role == "faculty" || body.role == "spc") role = 2;
+    //if (body.role == "admin") role = 0;
+    if(body.role == "faculty") role = 2;
+    else if(body.role == "spc") role = 3;
 
     var insertVals = {
         username: body.username,
@@ -332,10 +347,63 @@ app.post('/add_new_user', urlEncodedParser, function(req, res)
         else
         {
             console.log("NEW USER ADDED SUCCESS");
-            res.redirect('/dashboard');
+
+            if(role == 2)
+            {
+                var newInsert = 
+                {
+                    FacultyID: body.id,
+                    DepartmentID: body.department,
+                    Name: body.name,
+                    EmailID: body.email,
+                    MobileNumber: body.mobile
+                }
+
+                console.log("FAC DEPT + body.department");
+                connection.query("INSERT INTO FACULTY SET ?", newInsert, function(err2, result2){
+                    if(err2)
+                    {
+                        console.log(err);
+                        res.render('error');
+                    }
+                    else{
+                        console.log("ADDED NEW FAC");
+                        res.redirect('/');
+                    }
+                });
+            }
+
+            else if (role == 3)
+            {
+                var newInsert = 
+                {
+                    USN: body.id,
+                    DepartmentID: body.department,
+                    Username: body.username
+                }
+                connection.query("INSERT INTO SPC SET ?", newInsert, function(err2, result2){
+                    if(err2)
+                    {
+                        console.log(err2);
+                        res.render('error');
+                    }
+                    else{
+                        console.log("ADDED NEW SPC");
+                        res.redirect('/');
+                    }
+                });
+
+            }
+
+            else res.redirect('/');
         }
     });
+
+
 });
+
+
+
 
 
 app.get('/logout', function(req, res){
