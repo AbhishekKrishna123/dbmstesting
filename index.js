@@ -99,13 +99,18 @@ app.post('/register', urlEncodedParser, function(req, res){
 
 
 app.get('/password_change', urlEncodedParser, function (req, res){
-    res.render('password_change');
+    if (req.session.username) {
+        res.render('password_change');
+    }
+    else {
+        res.redirect('/');
+    }
 });
 
 app.post('/password_change', urlEncodedParser, function (req, res){
 
     //var body = req.body;
-    console.log("OITSIDE" + req.session.username);
+    //console.log("OITSIDE" + req.session.username);
     var password_change = require ("./password_change.js");
     password_change.PasswordChange(req, res, connection);
 
@@ -113,23 +118,31 @@ app.post('/password_change', urlEncodedParser, function (req, res){
 
 app.get('/add_company_test', function(req, res){
 
-    var retrieveCompanies;
+    if (req.session.username)
+    {
+        var retrieveCompanies;
 
-    connection.query("SELECT * FROM COMPANY", function(err, result){
+        connection.query("SELECT * FROM COMPANY", function(err, result){
 
-        console.log("\n\nCOM LIST: " + result[0].Name + "\n\n");
+            console.log("\n\nCOM LIST: " + result[0].Name + "\n\n");
 
-        var companyNames = [];
-        for(var i=0, l=result.length; i<l; i++) {
+            var companyNames = [];
+            for(var i=0, l=result.length; i<l; i++) {
 
-            companyNames.push(result[i].Name);
-        }
+                companyNames.push(result[i].Name);
+            }
 
-        console.log(companyNames);
-        //var comList = {companies: companyNames};
-        res.render('addCompanyTest', {Companies: companyNames});
+            console.log(companyNames);
+            //var comList = {companies: companyNames};
+            res.render('addCompanyTest', {Companies: companyNames});
 
-    });
+        });
+    }
+
+    else
+    {
+        res.redirect('/');
+    }
 });
 
 app.post('/add_company_test', urlEncodedParser, function(req, res){
@@ -153,7 +166,12 @@ app.post('/add_company_test', urlEncodedParser, function(req, res){
 });
 
 app.get('/add_company', function(req, res){
-    res.render('addCompany');
+    
+    if(req.session.username)
+    {
+        res.render('addCompany');
+    }
+    else res.redirect('/');
 });
 
 app.post('/add_company', urlEncodedParser, function(req, res){
@@ -191,8 +209,13 @@ app.post('/testregister', urlEncodedParser, function(req, res){
 
 
 app.get('/logout', function(req, res){
-    req.session.destroy();
-    res.redirect('/');
+
+    if (req.session.username)
+    {
+        req.session.destroy();
+        res.redirect('/');
+    }
+    else res.redirect('/');
 });
 
 app.listen(3000);
