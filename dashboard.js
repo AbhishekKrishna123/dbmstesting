@@ -114,5 +114,10 @@ module.exports =
             response.render('dashboard_placementcell');
         }
 
+        else if (role == 0) //admin
+        {
+            response.render('dashboard_admin');
+        }
+
     }
 }

@@ -152,7 +152,7 @@ app.post('/password_change', urlEncodedParser, function (req, res){
 
 app.get('/add_company_test', function(req, res){
 
-    if (req.session.username)
+    if (req.session.username && req.session.role != 1)
     {
         var retrieveCompanies;
 
@@ -206,7 +206,7 @@ app.post('/add_company_test', urlEncodedParser, function(req, res){
 
 app.get('/add_company', function(req, res){
     
-    if(req.session.username)
+    if(req.session.username && req.session.role != 1)
     {
         res.render('addCompany');
     }
@@ -259,6 +259,80 @@ app.post('/testunregister', urlEncodedParser, function(req, res)
         {
             console.log("UNREG SUCCESS!");
             res.send({status: 200});
+        }
+    });
+});
+
+app.get('/add_remove_users', function(req, res)
+{
+    if(req.session.username && req.session.role == 0)
+    {
+        connection.query("SELECT * FROM USER WHERE USERNAME NOT LIKE \"1RV%\" ORDER BY ROLE ASC", function(error, result)
+        {
+            if (error)
+            {
+                throw error;
+            }
+            else
+            {
+                res.render('addRemoveUsers', {Users: result});
+            }
+        });
+    }
+
+    else res.redirect('/');
+    
+});
+
+app.post('/remove_user', urlEncodedParser, function(req, res){
+
+    if(req.session.role == 0)
+    var body = req.body;
+    var del_query = "DELETE FROM USER WHERE USERNAME = '" + body.username + "';";
+    connection.query(del_query, function(error, result)
+    {
+        if(error)
+        {
+            throw error;
+        }
+        else
+        {
+            console.log("DELETED USER SUCCESSFULLY!");
+            res.send({status: 200});
+        }
+    });
+});
+
+
+app.get('/add_user', function(req, res)
+{
+    res.render('addNewUser');
+});
+
+app.post('/add_new_user', urlEncodedParser, function(req, res)
+{
+    var role;
+    var body = req.body;
+    if (body.role == "admin") role = 0;
+    else if(body.role == "faculty" || body.role == "spc") role = 2;
+
+    var insertVals = {
+        username: body.username,
+        password: body.password,
+        role: role
+    };
+
+    connection.query("INSERT INTO USER SET ?", insertVals, function(error, result){
+        if(error)
+        {
+            console.log("ERROR");
+            throw error;
+        }
+
+        else
+        {
+            console.log("NEW USER ADDED SUCCESS");
+            res.redirect('/dashboard');
         }
     });
 });
