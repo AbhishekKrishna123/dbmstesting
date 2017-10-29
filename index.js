@@ -15,6 +15,7 @@ var connection = mysql.createConnection({
 	database: "dbms"
 });
 
+// For persisting sessions in the database
 var session = require('express-session');
 var MySQLStore = require('express-mysql-session')(session);
 
@@ -28,6 +29,7 @@ var options = {
 
 var sessionStore = new MySQLStore(options);
  
+// For sessions
 app.use(session({
     key: 'session_cookie_name',
     secret: 'session_cookie_secret',
@@ -36,15 +38,13 @@ app.use(session({
     saveUninitialized: false
 }));
 
-// connecting ......
+// Connect to database
 connection.connect();
-
-app.use(session({secret: "secret"}));
 
 app.use(bodyParser.text());
 app.use(express.static('templates'));
 
-
+// Set up handlebars
 var exphbs  = require('express-handlebars');
 var hbs = exphbs.create({ /* config */ });
 app.engine('handlebars', hbs.engine);
@@ -205,7 +205,7 @@ app.post('/add_company_test', urlEncodedParser, function(req, res){
 });
 
 app.get('/add_company', function(req, res){
-    
+
     if(req.session.username && req.session.role != 1)
     {
         res.render('addCompany');
@@ -248,7 +248,7 @@ app.post('/testregister', urlEncodedParser, function(req, res){
 
 app.post('/testunregister', urlEncodedParser, function(req, res)
 {
-    var delete_query = "DELETE FROM REGISTER WHERE USN = '" + req.session.username + "' AND TESTID = '" + req.body.ID + "';"; 
+    var delete_query = "DELETE FROM REGISTER WHERE USN = '" + req.session.username + "' AND TESTID = '" + req.body.ID + "';";
     connection.query(delete_query, function(error, result)
     {
         if(error)
