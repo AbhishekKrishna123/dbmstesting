@@ -28,18 +28,35 @@ module.exports =
                     //return 0;
                 } else {
 
-                    var testq = "SELECT * FROM TEST WHERE TESTDATE > 2000-01-01";
-
-                    connection.query(testq, function(error, result){
-                        if (error)
+                    var testq_reg = "SELECT * FROM TEST WHERE TESTDATE > 2000-01-01 AND TEST.TESTID IN (SELECT TESTID FROM REGISTER WHERE REGISTER.USN = '" + req.session.username + "');";
+                    console.assert("REG" + testq_reg + "\n\n");
+                    connection.query(testq_reg, function(error_reg, result_reg){
+                        if (error_reg)
                         {
-                            throw error;
+                            throw error_reg;
                         }
                         else
                         {
-                            response.render('dashboard_stu', {
-                            Details: res[0],
-                            Tests: result
+                            // response.render('dashboard_stu', {
+                            // Details: res[0],
+                            // Tests: result_reg
+                            // });
+                            var testq_notreg = "SELECT * FROM TEST WHERE TESTDATE > 2000-01-01 AND TEST.TESTID NOT IN (SELECT TESTID FROM REGISTER WHERE REGISTER.USN = '" + req.session.username + "');";
+                            connection.query(testq_notreg, function(error_notreg, result_notreg){
+                                if (error_notreg)
+                                {
+                                    throw error_notreg;
+                                }
+
+                                else
+                                {
+                                    response.render('dashboard_stu', {
+                                        Details: res[0],
+                                        RegTests: result_reg,
+                                        UnregTests: result_notreg
+                                    });
+                                }
+
                             });
                         }
                     });

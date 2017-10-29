@@ -180,7 +180,7 @@
                 </tr>
             </thead>
             <tbody>
-                {{#each Tests}}
+                {{#each UnregTests}}
                     <tr>
                         <td> {{this.Name}} </td>
                         <td> {{this.TestDate}} </td>
@@ -188,6 +188,17 @@
                         <td> <button class="waves-effect waves-light btn blue" onclick = "reg(this)" name = {{this.TestID}}> Register </button> </td>
                     </tr>
                 {{/each}}
+                {{#each RegTests}}
+                    <tr>
+                        <td> {{this.Name}} </td>
+                        <td> {{this.TestDate}} </td>
+                        <td> {{this.TestTime}} </td>
+                        {{!-- <td> <button class="waves-effect waves-light btn blue" onclick = "reg(this)" name = {{this.TestID}}> Register </button> </td> --}}
+                        <td style = "color: green"> Already Registered </td> 
+                    /tr>
+                {{/each}}
+
+
 
             </tbody>
         </table>

@@ -43,26 +43,12 @@ app.use(session({secret: "secret"}));
 app.use(bodyParser.text());
 app.use(express.static('templates'));
 
-//app.set('views', __dirname + '/views')
-
-//app.set('view engine', 'ejs');
-
-//app.engine('html', require('ejs').renderFile);
-//app.set('view engine', 'html');
 
 var exphbs  = require('express-handlebars');
 var hbs = exphbs.create({ /* config */ });
 app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
 
-
-//app.engine('html', require('hbs').__express);
-
-// app.engine('html', require('ejs').renderFile);
-// app.set('view engine', 'html');
-
-//app.set('view engine', 'pug');
-//app.set('views','./views');
 
 
 app.get('/', function(req, res) {
@@ -73,10 +59,7 @@ app.get('/', function(req, res) {
     res.sendFile('home.html', { root: path.join(__dirname, 'templates')});
 });
 
-/*app.get('/login', function(req, res){
-    res.sendFile('login.html', { root: path.join(__dirname, 'templates') });
-});
-*/
+
 app.post('/login', urlEncodedParser, function(request, response){
     //res.sendFile('success.html', { root: path.join(__dirname, 'templates') });
     console.log(request.body.username + " : USN\n\n" + request.body.password + " : password\n\n");
@@ -192,6 +175,7 @@ app.post('/testregister', urlEncodedParser, function(req, res){
         {
             console.log("TESTREG SUCCESS");
             res.send({status: 200});
+            res.redirect('/dashboard');
         }
     });
 });
