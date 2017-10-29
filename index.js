@@ -152,6 +152,15 @@ app.post('/add_company_test', urlEncodedParser, function(req, res){
     });
 });
 
+app.get('/add_company', function(req, res){
+    res.render('addCompany');
+});
+
+app.post('/add_company', urlEncodedParser, function(req, res){
+    var addCompany = require('./addCompany.js');
+    addCompany.addCompany(req, res, connection);
+});
+
 
 app.post('/testregister', urlEncodedParser, function(req, res){
 
@@ -175,7 +184,7 @@ app.post('/testregister', urlEncodedParser, function(req, res){
         {
             console.log("TESTREG SUCCESS");
             res.send({status: 200});
-            res.redirect('/dashboard');
+            //res.redirect('/dashboard');
         }
     });
 });

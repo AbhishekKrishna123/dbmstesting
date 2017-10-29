@@ -64,7 +64,7 @@ module.exports =
             });
         }
 
-        else if (role == 2)//faculty
+        else if (role == 2)//faculty and spc login
         {
             connection.query("SELECT * FROM FACULTY WHERE FACULTYID = '" + req.session.username + "'", function(err, res, fields){
 
@@ -95,6 +95,11 @@ module.exports =
                     });
                 }
             });
+        }
+
+        else if (role == 3) // placement cell
+        {
+            response.render('dashboard_placementcell');
         }
 
     }
