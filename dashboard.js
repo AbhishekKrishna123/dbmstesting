@@ -38,7 +38,7 @@ module.exports =
                             throw error_reg;
                         }
                         else
-                        {  
+                        {
                             //console.log("DATE" + datetime);
                             //var testq_notreg = "SELECT * FROM TEST WHERE CUTOFFGPA <=  '" + res[0].CGPA + "' AND TEST.TESTID NOT IN (SELECT TESTID FROM REGISTER WHERE REGISTER.USN = '" + req.session.username + "');";
                             var testq_notreg = "SELECT * FROM TEST WHERE CUTOFFGPA <=  '" + res[0].CGPA + "' AND TEST.TESTID IN (SELECT TESTID FROM ELIGIBLEDEPARTMENTS WHERE DEPARTMENTID = '" + dept + "') AND TEST.TESTID NOT IN (SELECT TESTID FROM REGISTER WHERE REGISTER.USN = '" + req.session.username + "');";
@@ -65,6 +65,15 @@ module.exports =
                                                 RegTests: result_reg,
                                                 UnregTests: result_notreg,
                                                 IneligibleTests: result_notelig
+                                            }, function(err1, html1){
+                                                response.render('header', {
+                                                    Details: res[0],
+                                                }, function(err2, html2) {
+                                                    response.render('template', {
+                                                        header: html2,
+                                                        body: html1
+                                                    });
+                                                });
                                             });
                                         }
                                     });
@@ -103,6 +112,15 @@ module.exports =
                             EmailID: res[0].EmailID,
                             MobileNumber: res[0].MobileNumber,
                             Department: dept
+                        }, function(err1, html1){
+                            response.render('header', {
+                                Details: res[0],
+                            }, function(err2, html2) {
+                                response.render('template', {
+                                    header: html2,
+                                    body: html1
+                                });
+                            });
                         });
                     });
                 }

@@ -44,7 +44,7 @@ connection.connect();
 app.use(bodyParser.text());
 app.use(express.static('templates'));
 
-
+// Set up handlebars
 var exphbs  = require('express-handlebars');
 var hbs = exphbs.create({ /* config */ });
 app.engine('handlebars', hbs.engine);
