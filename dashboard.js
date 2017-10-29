@@ -28,7 +28,9 @@ module.exports =
                     //return 0;
                 } else {
 
-                    var testq_reg = "SELECT * FROM TEST WHERE TESTDATE > 2000-01-01 AND TEST.TESTID IN (SELECT TESTID FROM REGISTER WHERE REGISTER.USN = '" + req.session.username + "');";
+                    var datetime = new Date();
+                    console.log("GPA" + res[0].CGPA);
+                    var testq_reg = "SELECT * FROM TEST WHERE CUTOFFGPA <=  '" + res[0].CGPA + "' AND TEST.TESTID IN (SELECT TESTID FROM REGISTER WHERE REGISTER.USN = '" + req.session.username + "');";
                     console.assert("REG" + testq_reg + "\n\n");
                     connection.query(testq_reg, function(error_reg, result_reg){
                         if (error_reg)
@@ -36,12 +38,9 @@ module.exports =
                             throw error_reg;
                         }
                         else
-                        {
-                            // response.render('dashboard_stu', {
-                            // Details: res[0],
-                            // Tests: result_reg
-                            // });
-                            var testq_notreg = "SELECT * FROM TEST WHERE TESTDATE > 2000-01-01 AND TEST.TESTID NOT IN (SELECT TESTID FROM REGISTER WHERE REGISTER.USN = '" + req.session.username + "');";
+                        {  
+                            //console.log("DATE" + datetime);
+                            var testq_notreg = "SELECT * FROM TEST WHERE CUTOFFGPA <=  '" + res[0].CGPA + "' AND TEST.TESTID NOT IN (SELECT TESTID FROM REGISTER WHERE REGISTER.USN = '" + req.session.username + "');";
                             connection.query(testq_notreg, function(error_notreg, result_notreg){
                                 if (error_notreg)
                                 {
@@ -50,13 +49,30 @@ module.exports =
 
                                 else
                                 {
-                                    response.render('dashboard_stu', {
-                                        Details: res[0],
-                                        RegTests: result_reg,
-                                        UnregTests: result_notreg
+                                    //console.log("DATE FORMAT " + result_notreg[0].TestDate.getUTCYear());
+                                    // response.render('dashboard_stu', {
+                                    //     Details: res[0],
+                                    //     RegTests: result_reg,
+                                    //     UnregTests: result_notreg
+                                    // });
+                                    var testq_notelig = "SELECT * FROM TEST WHERE CUTOFFGPA >  '" + res[0].CGPA + "';";
+                                    connection.query(testq_notelig, function(error_notelig, result_notelig){
+                                        if(error_notelig)
+                                        {
+                                            throw error_notelig;
+                                        }
+
+                                        else
+                                        {
+                                            response.render('dashboard_stu', {
+                                                Details: res[0],
+                                                RegTests: result_reg,
+                                                UnregTests: result_notreg,
+                                                IneligibleTests: result_notelig
+                                            });
+                                        }
                                     });
                                 }
-
                             });
                         }
                     });

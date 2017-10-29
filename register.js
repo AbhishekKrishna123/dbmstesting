@@ -31,7 +31,6 @@ module.exports =
             SGPA2: body.sgpa2,
             SGPA3: body.sgpa3,
             SGPA4: body.sgpa4,
-
             Marks10th: body.marks10th,
             Marks12th: body.marks12th,
             Password: body.pwd,

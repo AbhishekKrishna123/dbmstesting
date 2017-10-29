@@ -60,6 +60,14 @@
                                 </div>
 							</div>
 
+							<div class = "row uniform">
+								<div class = "12u">
+									{{#each Departments}}
+										<input type = "checkbox" name = {{this.CODE}} value = {{this.CODE}} /> {{this.CODE}} <br>
+									{{/each}}	
+								</div>
+							</div>
+
 
 
 							<div class="row uniform 50%">
@@ -71,6 +79,9 @@
 									<input type="text" name="otherdetails" id="otherdetails" value="" placeholder="Other Details / Remarks"/>
 								</div>
 							</div>
+
+							
+
 
 
 							<div class="row uniform">

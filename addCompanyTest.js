@@ -33,5 +33,7 @@ module.exports =
                 res.redirect('/dashboard');
             }
         });
+
+        //INSERT INTO ELIGIBLE DEPTS
     }
 }

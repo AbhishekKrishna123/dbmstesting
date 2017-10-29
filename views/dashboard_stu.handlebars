@@ -185,7 +185,8 @@
                         <td> {{this.Name}} </td>
                         <td> {{this.TestDate}} </td>
                         <td> {{this.TestTime}} </td>
-                        <td> <button class="waves-effect waves-light btn blue" onclick = "reg(this)" name = {{this.TestID}}> Register </button> </td>
+                        <td style = "color: red"> Not Registered! </td> 
+                        <td> <button class="waves-effect waves-light btn green" onclick = "reg(this)" name = {{this.TestID}}> Register </button> </td>
                     </tr>
                 {{/each}}
                 {{#each RegTests}}
@@ -195,7 +196,20 @@
                         <td> {{this.TestTime}} </td>
                         {{!-- <td> <button class="waves-effect waves-light btn blue" onclick = "reg(this)" name = {{this.TestID}}> Register </button> </td> --}}
                         <td style = "color: green"> Already Registered </td> 
-                    /tr>
+                        <td> <button class="waves-effect waves-light btn red" onclick = "unreg(this)" name = {{this.TestID}}> Unregister </button> </td>
+                    </tr>
+                {{/each}}
+
+                {{#each IneligibleTests}}
+                    <tr>
+                        <td> {{this.Name}} </td>
+                        <td> {{this.TestDate}} </td>
+                        <td> {{this.TestTime}} </td>
+                        {{!-- <td> <button class="waves-effect waves-light btn blue" onclick = "reg(this)" name = {{this.TestID}}> Register </button> </td> --}}
+                        <td style = "color: black"> Cannot Register </td> 
+                        <td> Inadequte GPA </td>
+
+                    </tr>
                 {{/each}}
 
 
@@ -216,7 +230,7 @@
 
             function reg(obj)
             {
-                console.log("Function called");
+                console.log("Reg Function called");
                 var testID = obj.name;
                 $.ajax({
                     url: '/testregister',
@@ -227,6 +241,9 @@
                     success: function(data)
                     {
                         console.log("DATA SENT\n" + data);
+                        setTimeout(function(){// wait for 5 secs(2)
+                            location.reload(); // then reload the page.(3)
+                        }, 2000); 
 
                     },
 
@@ -237,8 +254,32 @@
 
                 });
             }
+
+            function unreg(obj)
+            {
+                console.log("Unreg function called");
+                var testID = obj.name;
+                $.ajax({
+                    url: '/testunregister',
+                    type: "POST",
+                    datatype: "json",
+                    data: {ID: testID},
+
+                    success: function(obj)
+                    {
+                        console.log("SUCCESS UNREG");
+                        setTimeout(function(){// wait for 5 secs(2)
+                            location.reload(); // then reload the page.(3)
+                        }, 100);
+                    },
+
+                    error: function(jqXHR, textstatus, err)
+                    {
+                        console.log("ERROR UNREG");
+                        
+                    }
+                });
+            }
         </script>
-
-
     </body>
 </html>

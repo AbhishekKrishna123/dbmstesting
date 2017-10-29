@@ -10,7 +10,8 @@ var mysql = require("mysql");
 var connection = mysql.createConnection({
 	host: "127.0.0.1",
 	user: "root",
-	password: "root",
+    password: "root",
+    dateStrings:true,
 	database: "dbms"
 });
 
@@ -122,19 +123,24 @@ app.get('/add_company_test', function(req, res){
     {
         var retrieveCompanies;
 
-        connection.query("SELECT * FROM COMPANY", function(err, result){
+        connection.query("SELECT * FROM COMPANY", function(err1, result1){
 
-            console.log("\n\nCOM LIST: " + result[0].Name + "\n\n");
+            console.log("\n\nCOM LIST: " + result1[0].Name + "\n\n");
 
             var companyNames = [];
-            for(var i=0, l=result.length; i<l; i++) {
+            for(var i=0, l=result1.length; i<l; i++) {
 
-                companyNames.push(result[i].Name);
+                companyNames.push(result1[i].Name);
             }
 
             console.log(companyNames);
             //var comList = {companies: companyNames};
-            res.render('addCompanyTest', {Companies: companyNames});
+
+            //res.render('addCompanyTest', {Companies: companyNames});
+            connection.query("SELECT DEPARTMENTID, NAME, CODE FROM DEPARTMENT", function(error2, result2){
+                console.log(result2[0]);
+                res.render('addCompanyTest', {Companies: companyNames, Departments: result2});
+            });
 
         });
     }
@@ -203,6 +209,23 @@ app.post('/testregister', urlEncodedParser, function(req, res){
             console.log("TESTREG SUCCESS");
             res.send({status: 200});
             //res.redirect('/dashboard');
+        }
+    });
+});
+
+app.post('/testunregister', urlEncodedParser, function(req, res)
+{
+    var delete_query = "DELETE FROM REGISTER WHERE USN = '" + req.session.username + "' AND TESTID = '" + req.body.ID + "';"; 
+    connection.query(delete_query, function(error, result)
+    {
+        if(error)
+        {
+            throw error;
+        }
+        else
+        {
+            console.log("UNREG SUCCESS!");
+            res.send({status: 200});
         }
     });
 });
