@@ -36,21 +36,23 @@
                 <br><br>
                 <a class="waves-effect waves-light btn blue" href="/add_remove_users"> Add or Remove Users </a>
             </div>
-            
-            <div class="center">
-                <br><br>
-                <a class="waves-effect waves-light btn blue" href="/logout"> Logout </a>
-            </div>
+
 
             <div class="center">
                 <br><br>
                 <a class="waves-effect waves-light btn blue" href="/password_change"> Change Password </a>
             </div>
 
+            <div class="center">
+                <br><br>
+                <a class="waves-effect waves-light btn blue" href="/logout"> Logout </a>
+            </div>
+
+
 
         </section>
 
-    
+
 
     <br><br>
 
@@ -77,7 +79,7 @@
                         console.log("DATA SENT\n" + data);
                         setTimeout(function(){// wait for 5 secs(2)
                             location.reload(); // then reload the page.(3)
-                        }, 2000); 
+                        }, 2000);
 
                     },
 
@@ -110,7 +112,7 @@
                     error: function(jqXHR, textstatus, err)
                     {
                         console.log("ERROR UNREG");
-                        
+
                     }
                 });
             }

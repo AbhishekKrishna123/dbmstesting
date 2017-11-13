@@ -5,6 +5,9 @@ var bodyParser = require("body-parser");
 var urlEncodedParser = bodyParser.urlencoded({extended: false});
 var path = require("path");
 
+
+var xl = require("exceljs");
+
 var mysql = require("mysql");
 // connect strings for mysql
 var connection = mysql.createConnection({
@@ -12,7 +15,8 @@ var connection = mysql.createConnection({
 	user: "root",
     password: "root",
     dateStrings:true,
-	database: "dbms"
+    database: "dbms",
+    multipleStatements: true
 });
 
 // For persisting sessions in the database
@@ -158,21 +162,28 @@ app.get('/add_company_test', function(req, res){
 
         connection.query("SELECT * FROM COMPANY", function(err1, result1){
 
-            console.log("\n\nCOM LIST: " + result1[0].Name + "\n\n");
+            console.log("\n\nCOM LIST: " + result1[0].CompanyName + "\n\n");
 
             var companyNames = [];
             for(var i=0, l=result1.length; i<l; i++) {
 
-                companyNames.push(result1[i].Name);
+                companyNames.push(result1[i].CompanyName);
             }
 
             console.log(companyNames);
             //var comList = {companies: companyNames};
 
             //res.render('addCompanyTest', {Companies: companyNames});
-            connection.query("SELECT DEPARTMENTID, NAME, CODE FROM DEPARTMENT", function(error2, result2){
+            connection.query("SELECT * FROM DEPARTMENT", function(error2, result2){
                 console.log(result2[0]);
-                res.render('addCompanyTest', {Companies: companyNames, Departments: result2});
+                res.render('header', {
+                    Details: {USN: req.session.username}
+                }, function(err1, html1) {
+                    res.render('addCompanyTest', {Companies: companyNames, Departments: result2}, function(err2, html2) {
+                        res.render('template', { header: html1 , body:html2 })
+                    });
+                })
+
             });
 
         });
@@ -193,7 +204,7 @@ app.post('/add_company_test', urlEncodedParser, function(req, res){
 
     console.log("FORM CNAME = " + companyName);
 
-    connection.query("SELECT * FROM COMPANY WHERE NAME LIKE '" + companyName + "%';", function(error, result){
+    connection.query("SELECT * FROM COMPANY WHERE COMPANYNAME LIKE '" + companyName + "%';", function(error, result){
         if (error) throw error;
         else
         {
@@ -281,7 +292,7 @@ app.get('/add_remove_users', function(req, res)
     }
 
     else res.redirect('/');
-    
+
 });
 
 app.post('/remove_user', urlEncodedParser, function(req, res){
@@ -304,7 +315,7 @@ app.post('/remove_user', urlEncodedParser, function(req, res){
 
 
 app.get('/add_new_user', function(req, res)
-{   
+{
     if(req.session.username && req.session.role == 0)
     {
         connection.query("SELECT * FROM DEPARTMENT", function(error, result)
@@ -318,7 +329,7 @@ app.get('/add_new_user', function(req, res)
                 res.render('addNewUser', {Departments: result});
             }
         });
-        
+
     }
     else res.redirect('/');
 });
@@ -350,7 +361,7 @@ app.post('/add_new_user', urlEncodedParser, function(req, res)
 
             if(role == 2)
             {
-                var newInsert = 
+                var newInsert =
                 {
                     FacultyID: body.id,
                     DepartmentID: body.department,
@@ -363,8 +374,9 @@ app.post('/add_new_user', urlEncodedParser, function(req, res)
                 connection.query("INSERT INTO FACULTY SET ?", newInsert, function(err2, result2){
                     if(err2)
                     {
-                        console.log(err);
                         res.render('error');
+                        //console.log(err);
+
                     }
                     else{
                         console.log("ADDED NEW FAC");
@@ -375,7 +387,7 @@ app.post('/add_new_user', urlEncodedParser, function(req, res)
 
             else if (role == 3)
             {
-                var newInsert = 
+                var newInsert =
                 {
                     USN: body.id,
                     DepartmentID: body.department,
@@ -403,8 +415,152 @@ app.post('/add_new_user', urlEncodedParser, function(req, res)
 });
 
 
+app.get('/test', function(req, res) {
 
+    //console.log(req.query.id);
+    var query = "SELECT * FROM REGISTER, STUDENT WHERE TESTID = " + req.query.id + " AND REGISTER.USN = STUDENT.USN";
+    var query2 = "SELECT * FROM TEST WHERE TEST.TESTID = " + req.query.id;
+    console.log(query2);
+    connection.query(query, function(err, result1) {
+        //console.log(result1);
+        connection.query(query2, function(err2, result2) {
+            console.log(result1);
+            res.render('header', {USN: req.session.username}, function(err, html) {
+                res.render('test', {Test: result2, Reg: result1}, function(err2, html2) {
+                    res.render('template', {header: html, body: html2});
+                });
+            });
+        });
+    });
 
+})
+
+app.get('/offer', function(req, res) {
+    var query = "SELECT * FROM REGISTER, STUDENT WHERE TESTID = " + req.query.id + " AND REGISTER.USN = STUDENT.USN";
+    var query2 = "SELECT * FROM TEST WHERE TEST.TESTID = " + req.query.id;
+    console.log(query2);
+    connection.query(query, function(err, result1) {
+        //console.log(result1);
+        connection.query(query2, function(err2, result2) {
+            console.log(result1);
+            res.render('header', {USN: req.session.username}, function(err, html) {
+                res.render('offer', {Test: result2, Reg: result1}, function(err2, html2) {
+                    res.render('template', {header: html, body: html2});
+                });
+            });
+        });
+    });
+})
+
+app.get('/add_test_result', function(req, res){
+
+    var date= new Date();
+    var currentDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
+
+    var query_test = "SELECT * FROM TEST WHERE TESTDATE < '" + currentDate + "';";
+    console.log(currentDate);
+
+    connection.query(query_test, function(error, result){
+        if (error)
+        {
+            console.log("Error");
+        }
+        else
+        {
+            res.render('add_test_result', {Tests: result});
+        }
+    });
+});
+
+app.post('/add_test_result', urlEncodedParser, function(req, res){
+
+    var body = req.body;
+    var query_student = "SELECT * FROM STUDENT,REGISTER WHERE TESTID = '" + body.test + "' AND STUDENT.USN = REGISTER.USN;";
+
+    connection.query(query_student, function(error, result){
+        if (error)
+        {
+            console.log("Error");
+        }
+        else
+        {
+            console.log("STUDENTS\n\n" + result.length);
+            res.render('header', {USN: req.session.username}, function(err, html) {
+                res.render('add_selected_students', {Students: result}, function(err2, html2) {
+                    res.render('template', {header: html, body: html2});
+                });
+            });
+        }
+    });
+});
+
+app.post('/add_selected_students', urlEncodedParser, function(req, res){
+
+    console.log(req.body);
+
+    var usnList = req.body.list.split(" ");
+
+    var query = "";
+
+    for (i = 0; i <usnList.length-1; i++) {
+        query += "UPDATE REGISTER SET `SELECTED` = 'YES' WHERE USN = '" + usnList[i] + "' AND TESTID = 37; ";
+    }
+
+    console.log(query);
+
+    connection.query(query, function(error, result){
+        if (error)
+        {
+            console.log("Error");
+            //res.sendStatus(500);
+        }
+        else
+        {
+            console.log("success " + result.length);
+            //res.sendStatus(200);
+            res.send({status: 200});
+        }
+    });
+
+    //res.sendStatus(200);
+});
+
+app.get("/report", function(req, res) {
+
+    if (req.session.role != 1)
+    {
+        var query = "SELECT * FROM REGISTER";
+        connection.query(query, function(err, result) {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                var workbook = new xl.Workbook();
+                var worksheet = workbook.addWorksheet('Register Report');
+
+                worksheet.columns = [
+                    { header: 'USN', key: 'USN', width: 20 },
+                    { header: 'TESTID', key: 'TESTID', width: 20 },
+                    { header: 'SELECTED', key: 'SELECTED', width: 20 }
+                ];
+
+                for (var i=0; i<result.length; i++) {
+                    worksheet.addRow([result[i].USN, result[i].TestID, result[i].Selected]);
+                }
+
+                workbook.xlsx.writeFile("C:/Users/Abhishek/Documents/5th Semester/DBMS/Report.xlsx")
+                .then(function() {
+                    "File saved!";
+                });
+            }
+        });
+        res.redirect("/");
+    }
+    else{
+        res.redirect('/');
+    }
+
+});
 
 app.get('/logout', function(req, res){
 

@@ -1,0 +1,78 @@
+
+    <section class="container row" style="margin-top: 3em">
+
+        <div class="container col s12 center">
+
+            <h4 class="teal-text center">Add an Offer</h4>
+
+
+            <div class="input-field col s12">
+                <i class="material-icons prefix">textsms</i>
+                <input type="text" id="autocomplete-input" class="autocomplete">
+                <label for="autocomplete-input">Select Test</label>
+            </div>
+        </div>
+
+        <div class="col s12"></div>
+            <div class="input-field col s6">
+                <input placeholder="Enter USN" id="usn" type="text" class="validate">
+                <label for="usn">Enter USN</label>
+            </div>
+            <div class="input-field col s6">
+                <input placeholder="Location" id="location" type="text" class="validate">
+                <label for="location">Location</label>
+            </div>
+            <div class="input-field col s6">
+                <input placeholder="Profile" id="profile" type="text" class="validate">
+                <label for="profile">Profile / Role</label>
+            </div>
+            <div class="input-field col s6">
+                <input placeholder="Compensation" id="compensation" type="text" class="validate">
+                <label for="compensation">Compensation / Salary</label>
+            </div>
+            <div class="input-field col s6">
+                <input placeholder="Other details" id="details" type="text" class="validate">
+                <label for="details">Details</label>
+            </div>
+
+        </div>
+
+    </section>
+
+    <div class="center">
+        <br><br>
+        <a class="waves-effect waves-light btn blue" href="/logout"> Logout </a>
+    </div>
+
+    <div class="center">
+        <br><br>
+        <a class="waves-effect waves-light btn blue" href="/password_change"> Change Password </a>
+    </div>
+
+    <br><br>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="./materialize/js/materialize.min.js"></script>
+
+        <script>
+
+            $(document).ready(function() {
+                $(".button-collapse").sideNav();
+            });
+
+            $('input.autocomplete').autocomplete({
+                data: {
+                    {{#each Test}}
+                            "{{this.TestName}}": null,
+                    {{/each}}
+                },
+                limit: 20, // The max amount of results that can be shown at once. Default: Infinity.
+                onAutocomplete: function(val) {
+                // Callback function when value is autcompleted.
+                },
+                minLength: 0, // The minimum length of the input for the autocomplete to start. Default: 1.
+            });
+
+        </script>
+    </body>
+</html>

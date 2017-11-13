@@ -1,0 +1,60 @@
+<section id="main" class="container">
+    <header>
+        <h2> Select Students </h2>
+    </header>
+
+    <div>
+        {{!-- <form method="post" action="/add_selected_students"> --}}
+
+                    {{#each Students}}
+                    <p>
+                        <input type="checkbox" id="{{this.USN}}" />
+                        <label for="{{this.USN}}">{{this.USN}}: {{this.FirstName}} {{this.LastName}}</label>
+                    </p>
+                    {{/each}}
+
+            <div class="row uniform">
+                <button class="waves-effect waves-light btn blue" onclick="sendStudentList();" id="submit">Add Students</button>
+            </div>
+        {{!-- </form> --}}
+    </div>
+</section>
+
+
+<!-- Scripts -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="./materialize/js/materialize.min.js"></script>
+
+<script>
+    function sendStudentList() {
+        var studentList = "";
+        var arr = [];
+        $('input[type="checkbox"]').filter(':checked').each(
+            function() {
+                studentList += this.id + " ";
+            }
+        );
+
+        //arr.push(studentList);
+
+        $.ajax({
+            type: "POST",
+            url: "/add_selected_students",
+            //contentType: "json",
+            dataType: "json",
+            data: {list: studentList},
+            success: function() {
+                console.log("AJAX done");
+                window.location = "/";
+            },
+            error: function() {
+                console.log("AJAX error");
+            }
+
+        });
+    }
+
+</script>
+
+</body>
+</html>

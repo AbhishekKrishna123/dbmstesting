@@ -1,0 +1,78 @@
+<!DOCTYPE HTML>
+<!--
+	Alpha by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title> Select Company </title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+	</head>
+	<body>
+		<div id="page-wrapper">
+
+			<!-- Header -->
+
+
+			<!-- Main -->
+				<section id="main" class="container 75%">
+					<header>
+						<h2> Add Test Result - Select Company </h2>
+						<p> RVCE Placement Management System </p>
+					</header>
+					<div class="box">
+						<form method="post" action="/add_test_result">
+
+							<div class="row uniform 50%">
+									<div class="12u">
+                                        <select name="test">
+                                            <option value = ""> Select Test </option>
+                                            {{#each Tests}}
+                                                <option value = {{this.TestID}}> {{this.Name}} </option>
+                                            {{/each}}
+                                        </select>
+								    </div>
+							</div>
+                            {{!-- <div class="row uniform"> --}}
+                                <button type="submit">Add Company</button>
+                            {{!-- </div> --}}
+						</form>
+					</div>
+				</section>
+
+			<!-- Footer -->
+				<!-- <footer id="footer">
+
+					<ul class="copyright">
+						<li>&copy; Untitled. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+					</ul>
+				</footer> -->
+
+		</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.dropotron.min.js"></script>
+			<script src="assets/js/jquery.scrollgress.min.js"></script>
+			<script src="assets/js/skel.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
+			<script src="assets/js/main.js"></script>
+
+			<!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script> -->
+			<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script>
+
+
+			<script>
+				$.validate({
+				modules : 'security'
+				});
+			</script>
+
+	</body>
+</html>

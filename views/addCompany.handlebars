@@ -4,9 +4,9 @@
 		<title> Add Test </title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
-		<link rel="stylesheet" href="assets/css/main.css" />
-		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+
+		<link rel="stylesheet" href="./materialize/css/materialize.min.css">
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	</head>
 	<body>
 		<div id="page-wrapper">
@@ -15,24 +15,24 @@
 
 
 			<!-- Main -->
-				<section id="main" class="container 75%">
+				<section id="main" class="container">
 					<header>
 						<h2> Add Company </h2>
 						<p> RVCE Placement Management System </p>
 					</header>
 					<div class="box">
 						<form method="post" action="/add_company">
-							<div class="row uniform 50%">
-								<div class="6u 12u(mobilep)">
+							<div class="row">
+								<div class="col s12 l6">
 									<input type = "text" name = "companyname" id = "companyname" value = "" required = "" placeholder = "Company Name"/>
 								</div>
-								<div class="6u 12u(mobilep)">
+								<div class="col s12 l6">
                                         <input type="text" name="companydetails" id="companydetails" value="" required = "" placeholder="Company Details" />
                                 </div>
 							</div>
 
 							<div class="row uniform">
-								<div class="12u">
+								<div class="s12">
 									<ul class="actions align-center">
 										<li><input type="submit" value="Add Company" /></li>
 									</ul>
@@ -44,13 +44,8 @@
 		</div>
 
 		<!-- Scripts -->
-			<script src="assets/js/jquery.min.js"></script>
-			<script src="assets/js/jquery.dropotron.min.js"></script>
-			<script src="assets/js/jquery.scrollgress.min.js"></script>
-			<script src="assets/js/skel.min.js"></script>
-			<script src="assets/js/util.js"></script>
-			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
-			<script src="assets/js/main.js"></script>
+			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+			<script src="./materialize/js/materialize.min.js"></script>
 
 			<!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script> -->
 			<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script>

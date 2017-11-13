@@ -8,21 +8,21 @@ var app = express();
 
 var mysql = require("mysql");
 
-module.exports = 
+module.exports =
 {
     addCompany : function(req, res, connection)
     {
         var body = req.body;
-        
-        var insertVals = 
+
+        var insertVals =
         {
-            Name: body.companyname,
+            CompanyName: body.companyname,
             Details: body.companydetails
         }
 
         connection.query("INSERT INTO COMPANY SET ?", insertVals, function(err, result) {
             if(err) throw err;
-            else 
+            else
             {
                 console.log("SUCCESS" + result);
                 res.redirect('/dashboard');

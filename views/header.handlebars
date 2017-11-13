@@ -8,17 +8,26 @@
 
         <link rel="stylesheet" href="./materialize/css/materialize.min.css">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+        {{!-- <style>
+            body {
+                background-color: #000;
+                color: #eee;
+            }
+        </style> --}}
     </head>
 
     <body>
-        <nav class="indigo darken-3">
+        <nav class="teal">
             <div class="nav-wrapper">
-                <a href="#" class="brand-logo center">Career Portal</a>
+                <a href="/dashboard" class="brand-logo center">Career Portal</a>
                 <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
                 <ul id="nav-mobile" class="right hide-on-med-and-down">
-                    <li><a href="">Logged in as {{Details.USN}}</a></li>
+                    <li><a></a>Logged in as {{Details.USN}}</a></li>
+                    <li><a href="/logout">Logout</a></li>
                 </ul>
                 <ul class="side-nav" id="mobile-demo">
+                    <li><a href="/dashboard" class="active">Dashboard</a></li>
                     <li><a href="/logout">Logout</a></li>
                 </ul>
             </div>
