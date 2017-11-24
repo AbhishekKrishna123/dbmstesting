@@ -1,45 +1,55 @@
 <html>
     <head> 
         <title> Success! </title> 
+        <link rel="stylesheet" href="./materialize/css/materialize.min.css">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     </head> 
     <body>
         <h2 align = "center"> Company Added Successfully! </h2>
 
-        <table class="bordered highlight ">
-            <thead>
-                <tr>
-                    <th>
-                        Field
-                    </th>
-                    <th>
-                        Value
-                    </th>
-                </tr>
-            </thead>
+        <div class="container col s8 16 center">
+            <table class="bordered highlight ">
+                <thead>
+                    <tr>
+                        <th>
+                            Field
+                        </th>
+                        <th>
+                            Value
+                        </th>
+                    </tr>
+                </thead>
 
-            <tbody>
-                <tr>
-                    <td>
-                        Comapny Name
-                    </td>
-                    <td>
-                        {{Name}}
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Company Details
-                    </td>
-                    <td>
-                        {{Details}}
-                    </td>
-                </tr>
-                  
-            </tbody>
-        </table>
-                
+                <tbody>
+                    <tr>
+                        <td>
+                            Company Name
+                        </td>
+                        <td>
+                            {{Name}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Company Details
+                        </td>
+                        <td>
+                            {{Details}}
+                        </td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+                    
+            <br>
+            <br>
+        </div>
 
-        <a class="waves-effect waves-light btn blue" href="/"> Back to Dashboard </a>
+        
+        <div class = "center">
+            <a class="waves-effect waves-light btn teal" href="/dashboard"> Back to Dashboard </a>
+        </div>
+        
 
     </body>   
-</html>>
+</html>

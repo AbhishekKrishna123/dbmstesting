@@ -94,7 +94,6 @@ app.get('/dashboard', function(req, res) {
 
     if (req.session.username) 
     {
-
         if(req.session.username[0] == '1')
         {
             var dept_query = "SELECT * FROM DEPARTMENT WHERE DEPARTMENTID IN (SELECT DEPARTMENT FROM STUDENT WHERE USN = '" + req.session.username + "');";
@@ -103,7 +102,7 @@ app.get('/dashboard', function(req, res) {
                 if(error)
                 {
                     console.log("\n---------------------------\nDashboard Error: Unable to retrieve Department ID\n---------------------------\n")
-                    res.render('error');
+                    res.redirect('/error');
                 }
                 else
                 {
@@ -128,12 +127,22 @@ app.get('/dashboard', function(req, res) {
 
 //--------------------------------------------------------------------------------------------
 
-app.get('/password_change', urlEncodedParser, function (req, res){
+app.get('/error', function(req, res){
+
+    res.render('error');
+
+});
+
+
+//--------------------------------------------------------------------------------------------
+
+app.get('/password_change', function (req, res){
 
     if (req.session.username) {
         res.render('passwordChange');
     }
-    else {
+    else 
+    {
         res.redirect('/');
     }
 });
@@ -147,6 +156,21 @@ app.post('/password_change', urlEncodedParser, function (req, res){
 
 });
 
+
+//--------------------------------------------------------------------------------------------
+
+app.get('/password_change_success', function (req, res){
+    
+    res.render('passwordChangeSuccess');
+});
+    
+//--------------------------------------------------------------------------------------------
+
+app.get('/password_change_fail', function (req, res){
+    
+    res.render('passwordChangeFail');
+});
+    
 //--------------------------------------------------------------------------------------------
 
 app.get('/logout', function(req, res)
@@ -157,7 +181,10 @@ app.get('/logout', function(req, res)
         res.redirect('/');
     }
     
-    else res.redirect('/');
+    else
+    {
+         res.redirect('/');
+    }
     
 });     
 
@@ -209,7 +236,7 @@ app.post('/test_register', urlEncodedParser, function(req, res){
         if(error)
         {
             console.log("\n---------------------------\nBackend Error: Unable to insert into table Register\n---------------------------\n");
-            res.render('error');
+            res.redirect('/error');
         }
     
         else
@@ -230,7 +257,7 @@ app.post('/test_unregister', urlEncodedParser, function(req, res)
         if(error)
         {
             console.log("\n---------------------------\nBackend Error: Unable to delete from table Register\n---------------------------\n");
-            res.render('error');
+            res.redirect('/error');
         }
         else
         {
@@ -302,7 +329,7 @@ app.post('/add_company_test', urlEncodedParser, function(req, res){
         if (error)
         {
             console.log("\n---------------------------\nBackend Error: Unable to retrieve company details from table Company\n---------------------------\n");
-            res.render('error');
+            res.redirect('/error');
         }
         else
         {
@@ -320,7 +347,10 @@ app.get('/add_company', function(req, res){
     {
         res.render('addCompany');
     }
-    else res.redirect('/');
+    else
+    {
+        res.redirect('/');
+    }
 });
 
 //--------------------------------------------------------------------------------------------
@@ -348,7 +378,7 @@ app.get('/add_test_result', function(req, res){
             if (error)
             {
                 console.log("\n---------------------------\nBackend Error: Unable to retrieve test details from Test\n---------------------------\n");
-                res.render('error');
+                res.redirect('/error');
             }
             else
             {
@@ -374,7 +404,7 @@ app.post('/add_test_result', urlEncodedParser, function(req, res){
         if (error)
         {
             console.log("\n---------------------------\nBackend Error: Unable to retrieve list of registered students\n---------------------------\n");
-            res.render('error');
+            res.redirect('/error');
         }
         else
         {
@@ -408,7 +438,7 @@ app.post('/add_selected_students', urlEncodedParser, function(req, res){
         if (error)
         {
             console.log("\n---------------------------\nBackend Error: Unable to update table Register to add selected students\n---------------------------\n");
-            res.render('error');
+            res.redirect('/error');
         }
         else
         {
@@ -430,7 +460,7 @@ app.get("/report", function(req, res) {
             if (err) 
             {
                 console.log("\n---------------------------\nBackend Error: Unable to retrieve list of registered students\n---------------------------\n");
-                res.render('error');
+                res.redirect('/error');
             }
             
             else 
@@ -456,7 +486,9 @@ app.get("/report", function(req, res) {
 
         res.redirect("/");
     }
-    else{
+
+    else
+    {
         res.redirect('/');
     }
 
@@ -478,7 +510,7 @@ app.get('/add_remove_users', function(req, res)
             if (error)
             {
                 console.log("\n---------------------------\nBackend Error: Unable to retrieve list of users for admin\n---------------------------\n")
-                res.render('error');
+                res.redirect('/error');
             }
             else
             {
@@ -487,7 +519,10 @@ app.get('/add_remove_users', function(req, res)
         });
     }
 
-    else res.redirect('/');
+    else
+    {
+        res.redirect('/');
+    }
 });
 
 //--------------------------------------------------------------------------------------------
@@ -502,7 +537,7 @@ app.post('/remove_user', urlEncodedParser, function(req, res){
         if(error)
         {
             console.log("\n---------------------------\nBackend Error: Unable to delete user\n---------------------------\n")
-            res.render('error');
+            res.redirect('/error');
         }
         else
         {
@@ -523,7 +558,7 @@ app.get('/add_new_user', function(req, res)
             if(error)
             {
                 console.log("\n---------------------------\nBackend Error: Unable to get list of departments to add new user\n---------------------------\n")
-                res.render('error');
+                res.redirect('/error');
             }
             else
             {
@@ -532,7 +567,10 @@ app.get('/add_new_user', function(req, res)
         });
 
     }
-    else res.redirect('/');
+    else
+    {
+        res.redirect('/');
+    }
 });
 
 //--------------------------------------------------------------------------------------------
@@ -555,7 +593,7 @@ app.post('/add_new_user', urlEncodedParser, function(req, res)
         if(error)
         {
             console.log("\n---------------------------\nBackend Error: Unable to insert new user\n---------------------------\n");
-            res.render('error');
+            res.redirect('/error');
         }
 
         else
@@ -576,11 +614,11 @@ app.post('/add_new_user', urlEncodedParser, function(req, res)
                     if(err2)
                     {
                         console.log("\n---------------------------\nBackend Error: Unable to insert new faculty user\n---------------------------\n")
-                        res.render('error');
+                        res.redirect('/error');
                     }
                     else
                     {
-                        res.redirect('/');
+                        res.redirect('/dashboard');
                     }
                 });
             }
@@ -598,17 +636,17 @@ app.post('/add_new_user', urlEncodedParser, function(req, res)
                     if(err2)
                     {
                         console.log("\n---------------------------\nBackend Error: Unable to insert new SPC user\n---------------------------\n");
-                        res.render('error');
+                        res.redirect('/error');
                     }
                     else
                     {
-                        res.redirect('/');
+                        res.redirect('/dashboard');
                     }
                 });
 
             }
 
-            else res.redirect('/');
+            else res.redirect('/dashboard');
         }
     });
 

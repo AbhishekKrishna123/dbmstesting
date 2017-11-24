@@ -32,7 +32,7 @@ module.exports =
             if(err1)
             {
                 console.log("\n---------------------------\nbackend Error: Unable to insert into table Test\n---------------------------\n");
-                res.render('error');                
+                res.redirect('/error');                
             }
             else
             {
@@ -43,7 +43,7 @@ module.exports =
                     if (err)
                     {
                         console.log("\n---------------------------\nBackend Error: Unable to retrieve company test details\n---------------------------\n")
-                        res.render('error');
+                        res.redirect('/error');
                     }
 
                     else
@@ -55,7 +55,7 @@ module.exports =
                             if (err2)
                             {
                                 console.log("\n---------------------------\nBackend Error: Unable to get department codes\n---------------------------\n")
-                                res.render('error');
+                                res.redirect('/error');
                             } 
                             
                             else 
@@ -92,7 +92,7 @@ module.exports =
                                     if(err3)
                                     {
                                         console.log("\n---------------------------\nBackend Error: Unable to insert into table EligibleDepartments\n---------------------------\n")
-                                        res.render('error');
+                                        res.redirect('/error');
                                     }
                                 });
                             }
@@ -102,6 +102,6 @@ module.exports =
             }
         });
 
-        res.redirect('/');
+        res.redirect('/dashboard');
     }
 }

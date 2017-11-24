@@ -36,7 +36,7 @@ module.exports =
                 if(res.length == 0) 
                 {
                     console.log("\n---------------------------\nDashboard Error: USN doesn't match Username\n---------------------------\n");
-                    response.render('error');
+                    response.redirect('/error');
                 }
                 
                 else 
@@ -123,7 +123,7 @@ module.exports =
                 if(res.length == 0) 
                 {
                     console.log("\n---------------------------\nDashboard Error: Faculty ID doesn't match Username\n---------------------------\n");
-                    response.render('error');
+                    response.redirect('/error');
                 } 
                 
                 else 
@@ -186,7 +186,7 @@ module.exports =
                         if(errid)
                         {
                             console.log("\n---------------------------\nBackend Error: Unable to retrieve department details for dashboard\n---------------------------\n")
-                            response.render('error');
+                            response.redirect('/error');
                         }
 
                         else

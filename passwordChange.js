@@ -20,7 +20,7 @@ module.exports =
 
         if(new_password != cnew_password)
         {
-            res.render('passwordChangeFail');
+            res.redirect('/password_change_fail');
         }
 
         var user_details_query = "SELECT * FROM USER WHERE USERNAME = '" + username + "';"
@@ -30,7 +30,7 @@ module.exports =
             if(err) 
             {
                 console.log("\n---------------------------\n Backend Error: Unable to retrieve details for current user\n---------------------------\n");
-                res.render('error');
+                res.redirect('/error');
             }
 
             else
@@ -44,18 +44,18 @@ module.exports =
                         if(error)
                         {
                             console.log("\n---------------------------\n Backend Error: Unable to update password\n---------------------------\n");
-                            res.render('error');
+                            res.redirect('/error');
                         }
                         else 
                         {
-                            res.render('passwordChangeSuccess');
+                            res.redirect('/password_change_success');
                         }
                     });
                 }
 
                 else
                 {
-                    res.render('passwordChangeFail');
+                    res.redirect('password_change_fail');
                 }
             }
         });
