@@ -419,6 +419,59 @@ app.post('/add_test_result', urlEncodedParser, function(req, res){
 });
 
 //--------------------------------------------------------------------------------------------
+    
+app.post('/add_offer_students', urlEncodedParser, function(req, res){
+    
+    var body = req.body;
+    // console.log(body);
+    var list = body.list.split(" ");
+    var company = body.company;
+
+    var update_query = "";
+    for (i = 0; i <list.length-1; i++) {
+        update_query += "UPDATE STUDENT SET PLACED = 'Yes' WHERE USN = '" + list[i] + "';";
+    }
+
+    var insert_query = "";
+
+    
+
+    for (i = 0; i <list.length-1; i++) {
+        insert_query += "INSERT INTO OFFER (USN, COMPANYID) VALUES ('" + list[i] + "', '" + company + "');";
+    }
+
+    // console.log(insert_query);
+    // console.log(update_query);
+    console.log(insert_query);
+
+
+    connection.query(update_query, function(error1, result1){
+
+        if(error1)
+        {
+            console.log("\nBackend Error. Couldn't update Student to reflect offer\n");
+        }
+        else
+        {
+            connection.query(insert_query, function(error2, result2){
+
+                if(error2)
+                {
+                    console.log("\nBackend Error: Couldn't Insert into table Offer\n");
+                }
+                else
+                {
+                    res.send({status: 200});
+                }
+            });
+
+        }
+    });
+
+
+});
+
+//--------------------------------------------------------------------------------------------
 
 app.post('/add_selected_students', urlEncodedParser, function(req, res){
     
@@ -432,7 +485,7 @@ app.post('/add_selected_students', urlEncodedParser, function(req, res){
         register_query += "UPDATE REGISTER SET SELECTED = 'YES' WHERE USN = '" + usnList[i] + "' AND TESTID = 13; ";
     }
     
-    console.log(register_query);
+    //console.log(register_query);
     
     connection.query(register_query, function(error, result){
         if (error)
@@ -448,7 +501,51 @@ app.post('/add_selected_students', urlEncodedParser, function(req, res){
 });
 
 //--------------------------------------------------------------------------------------------
+
+app.get('/add_offer', function(req, res){
+
+    var date= new Date();
+    var currentDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
+
+    connection.query("SELECT * FROM COMPANY, TEST WHERE COMPANY.COMPANYID = TEST.COMPANYID AND TEST.TESTDATE < '" + currentDate + "';", function(err, result){
+
+        if(err)
+        {
+            console.log("\nBackend Error: Couldnt retrieve tests for adding offer\n");
+        }
+        else
+        {
+            res.render('addOfferTest', {CompaniesTests: result, username: req.session.username});
+        }
+    });
+});
+
+//--------------------------------------------------------------------------------------------
+
+app.post('/add_offer', urlEncodedParser, function(req, res){
     
+    var body = req.body;
+    //console.log(body.company);
+    var query = "SELECT * FROM DEPARTMENT, REGISTER, COMPANY, TEST, STUDENT WHERE COMPANY.COMPANYID = '" + body.company +
+    "' AND TEST.COMPANYID = '" + body.company + "' AND REGISTER.TESTID = TEST.TESTID AND REGISTER.USN = STUDENT.USN" + 
+    " AND REGISTER.SELECTED = 'YES' AND DEPARTMENT.DEPARTMENTID = STUDENT.DEPARTMENT AND STUDENT.PLACED = 'NO';";
+
+    connection.query(query, function(err, result){
+
+        if (err)
+        {
+            console.log("\nBackend Error: Couldn't retrieve selected students details for adding offer\n");
+        }
+        else
+        {
+            //console.log(result);
+            res.render('addOfferStudents', {Students: result, username: req.session.username});
+        }
+    });    
+});
+    
+//--------------------------------------------------------------------------------------------
+
 app.get("/report", function(req, res) {
     
     if(req.session.username && req.session.role != 1)

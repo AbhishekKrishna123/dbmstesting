@@ -1,0 +1,81 @@
+
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<title> Select Company </title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link rel="manifest" href="site.webmanifest">
+	<link rel="apple-touch-icon" href="icon.png">
+	<!-- Place favicon.ico in the root directory -->
+
+	{{!-- <link rel="stylesheet" href="css/normalize.css">
+	<link rel="stylesheet" href="css/main.css"> --}}
+	<link rel="stylesheet" href="materialize/css/materialize.min.css">
+</head>
+
+<body>
+	<nav class="teal">
+		<div class="nav-wrapper">
+			<a href="/dashboard" class="brand-logo center">Career Portal</a>
+			<a href="#" data-activates="mobile-demo" class="button-collapse">
+				<i class="material-icons">menu</i>
+			</a>
+			<ul id="nav-mobile" class="right hide-on-med-and-down">
+				<li>
+					<a></a>Logged in as {{username}}</a>
+				</li>
+				<li>
+					<a href="/logout">Logout</a>
+				</li>
+			</ul>
+			<ul class="side-nav" id="mobile-demo">
+				<li>
+					<a href="/dashboard" class="active">Dashboard</a>
+				</li>
+				<li>
+					<a href="/logout">Logout</a>
+				</li>
+			</ul>
+		</div>
+	</nav>
+
+	<br><br>
+	<h4 align = "center"> Add an Offer </h4>
+
+	<br><br><br>
+	<section class = "container center">
+		<form method = "post" action = "/add_offer">
+			<div class="input-field col s6">
+				<select name = "company">
+					<option value="" disabled selected >Select Company</option>
+					{{#each CompaniesTests}}
+						<option value={{this.CompanyID}}> {{this.CompanyName}} </option>
+					{{/each}}
+				</select>
+			</div>
+			<button class="btn waves-effect waves-light" type="submit" name="action">Select Company</button>
+		</form>
+	</section>
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script>
+	
+	<script src="./materialize/js/materialize.min.js"></script>
+
+	<script>
+		$.validate({
+			modules: 'security'
+		});
+		$(document).ready(function() {
+   			$('select').material_select();
+  		});
+	</script>
+
+</body>
+</html>
