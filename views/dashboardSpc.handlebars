@@ -8,16 +8,16 @@
             <h4 class="orange-text">Company Tests</h4>
 
             {{#each Tests}}
-                <div class="card center container" style="padding: 2em; margin-left: auto; margin-right: auto;">
+                <div class="card blue-grey darken-3 center container" style="padding: 2em; margin-left: auto; margin-right: auto;">
                     <h4 class="blue-text">{{this.Name}}</h4>
                     <div class="row center">
-                        <h6 class=" center grey-text col s12">by {{this.CompanyName}}</h6>
+                        <h6 class=" center white-text col s12">by {{this.CompanyName}}</h6>
                     </div>
                     <div class="row">
-                        <p class="grey-text col s6">Date: {{this.TestDate}}</p>
-                        <p class="grey-text col s6">Time: {{this.TestTime}}</p>
-                        <p class="grey-text col s6">Location: {{this.Location}}</p>
-                        <p class="grey-text col s6">Cut-Off: {{this.CutOffGPA}}</p>
+                        <p class="white-text col s6">Date: {{this.TestDate}}</p>
+                        <p class="white-text col s6">Time: {{this.TestTime}}</p>
+                        <p class="white-text col s6">Location: {{this.Location}}</p>
+                        <p class="white-text col s6">Cut-Off: {{this.CutOffGPA}}</p>
                     </div>
                     <a class="waves-effect waves-light btn green" href="/test?id={{this.TestID}}" name = {{this.TestID}}> View </a>
 

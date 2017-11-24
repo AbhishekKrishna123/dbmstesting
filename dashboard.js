@@ -41,75 +41,127 @@ module.exports =
                 
                 else 
                 {
-                    var testq_reg = "SELECT * FROM TEST, COMPANY WHERE CUTOFFGPA <=  " + res[0].CGPA + 
-                    " AND TEST.TESTID IN (SELECT TESTID FROM ELIGIBLEDEPARTMENTS WHERE DEPARTMENTID = '" + dept + 
-                    "') AND TEST.TESTID IN (SELECT TESTID FROM REGISTER WHERE REGISTER.USN = '" + 
-                    req.session.username + "') AND TEST.COMPANYID = COMPANY.COMPANYID AND TESTDATE >= '" + currentDate + "'";
+                    if(res[0].Placed != "Yes")
+                    {
+                        var testq_reg = "SELECT * FROM TEST, COMPANY WHERE CUTOFFGPA <=  " + res[0].CGPA + 
+                        " AND TEST.TESTID IN (SELECT TESTID FROM ELIGIBLEDEPARTMENTS WHERE DEPARTMENTID = '" + dept + 
+                        "') AND TEST.TESTID IN (SELECT TESTID FROM REGISTER WHERE REGISTER.USN = '" + 
+                        req.session.username + "') AND TEST.COMPANYID = COMPANY.COMPANYID AND TESTDATE >= '" + currentDate + "'";
 
-                    connection.query(testq_reg, function(error_reg, result_reg){
-                        
-                        if (error_reg)
-                        {
-                            throw error_reg;
-                        }
-                        
-                        else
-                        {
-                            var testq_notreg = "SELECT * FROM TEST, COMPANY WHERE CUTOFFGPA <=  " + res[0].CGPA + 
-                            " AND TEST.TESTID IN (SELECT TESTID FROM ELIGIBLEDEPARTMENTS WHERE DEPARTMENTID = '" + dept + 
-                            "') AND TEST.TESTID NOT IN (SELECT TESTID FROM REGISTER WHERE REGISTER.USN = '" + 
-                            req.session.username + "') AND TEST.COMPANYID = COMPANY.COMPANYID AND TESTDATE >= '" + currentDate + "'";
+                        connection.query(testq_reg, function(error_reg, result_reg){
+                            
+                            if (error_reg)
+                            {
+                                throw error_reg;
+                            }
+                            
+                            else
+                            {
+                                var testq_notreg = "SELECT * FROM TEST, COMPANY WHERE CUTOFFGPA <=  " + res[0].CGPA + 
+                                " AND TEST.TESTID IN (SELECT TESTID FROM ELIGIBLEDEPARTMENTS WHERE DEPARTMENTID = '" + dept + 
+                                "') AND TEST.TESTID NOT IN (SELECT TESTID FROM REGISTER WHERE REGISTER.USN = '" + 
+                                req.session.username + "') AND TEST.COMPANYID = COMPANY.COMPANYID AND TESTDATE >= '" + currentDate + "'";
 
-                            connection.query(testq_notreg, function(error_notreg, result_notreg){
-                                if (error_notreg)
-                                {
-                                    throw error_notreg;
-                                }
+                                connection.query(testq_notreg, function(error_notreg, result_notreg){
+                                    if (error_notreg)
+                                    {
+                                        throw error_notreg;
+                                    }
 
-                                else
-                                {
-                                    var testq_notelig = "SELECT * FROM TEST, COMPANY WHERE CUTOFFGPA >  " + res[0].CGPA + 
-                                    " AND TEST.TESTID IN (SELECT TESTID FROM ELIGIBLEDEPARTMENTS WHERE DEPARTMENTID = '" + dept + 
-                                    "') AND TEST.CompanyID = COMPANY.CompanyID AND TESTDATE >= '" + currentDate + "'";
+                                    else
+                                    {
+                                        var testq_notelig = "SELECT * FROM TEST, COMPANY WHERE CUTOFFGPA >  " + res[0].CGPA + 
+                                        " AND TEST.TESTID IN (SELECT TESTID FROM ELIGIBLEDEPARTMENTS WHERE DEPARTMENTID = '" + dept + 
+                                        "') AND TEST.CompanyID = COMPANY.CompanyID AND TESTDATE >= '" + currentDate + "'";
 
-                                    connection.query(testq_notelig, function(error_notelig, result_notelig){
-                                        if(error_notelig)
-                                        {
-                                            throw error_notelig;
-                                        }
+                                        connection.query(testq_notelig, function(error_notelig, result_notelig){
+                                            if(error_notelig)
+                                            {
+                                                throw error_notelig;
+                                            }
 
-                                        else
-                                        {
+                                            else
+                                            {
 
-                                            var testq_old = "SELECT * FROM TEST LEFT JOIN REGISTER ON TEST.TESTID = REGISTER.TESTID AND REGISTER.USN = '" + 
-                                            req.session.username + "'" +  " WHERE TESTDATE < '" + currentDate + "';";
+                                                var testq_old = "SELECT * FROM COMPANY, TEST LEFT JOIN REGISTER ON TEST.TESTID = REGISTER.TESTID AND REGISTER.USN = '" + 
+                                                req.session.username + "'" +  " WHERE TESTDATE < '" + currentDate + "'" +
+                                                " AND COMPANY.COMPANYID = TEST.COMPANYID;";
 
-                                            connection.query(testq_old, function(err_old, result_old) {
+                                                connection.query(testq_old, function(err_old, result_old) {
 
-                                                response.render('dashboardStu', {
-                                                    Details: res[0],
-                                                    Department: dept,
-                                                    RegTests: result_reg,
-                                                    UnregTests: result_notreg,
-                                                    IneligibleTests: result_notelig,
-                                                    OldTests: result_old
-                                                }, function(err1, html1){
-                                                    response.render('header', {
-                                                        username: req.session.username,
-                                                    }, function(err2, html2) {
-                                                        response.render('template', {
-                                                            header: html2,
-                                                            body: html1
+                                                    response.render('dashboardStu', {
+                                                        Details: res[0],
+                                                        Department: dept,
+                                                        RegTests: result_reg,
+                                                        UnregTests: result_notreg,
+                                                        IneligibleTests: result_notelig,
+                                                        OldTests: result_old
+                                                        // Placed: NULL
+                                                    }, function(err1, html1){
+                                                        response.render('header', {
+                                                            username: req.session.username,
+                                                        }, function(err2, html2) {
+                                                            response.render('template', {
+                                                                header: html2,
+                                                                body: html1
+                                                            });
                                                         });
                                                     });
+                                                })
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }
+
+                    else
+                    {
+                        connection.query("SELECT * FROM COMPANY, TEST WHERE COMPANY.COMPANYID = TEST.COMPANYID AND TEST.TESTDATE >= '" + currentDate + "';", function(err1, res1){
+
+                            if(err1)
+                            {
+                                console.log("\nBackend Error: Couldn't retrieve tests\n");
+                            }
+
+                            else
+                            {
+
+                                connection.query("SELECT * FROM COMPANY, TEST WHERE COMPANY.COMPANYID = TEST.COMPANYID AND TEST.TESTDATE < '" + currentDate + "';", function(err2, res2){
+                                    
+                                    if (err2)
+                                    {
+                                        console.log("\nBackend Error: Couldn't retrieve old tests\n");
+                                    }
+
+                                    else
+                                    {
+                                    
+                                        response.render('dashboardStu', {
+                                            Details: res[0],
+                                            Department: dept,
+                                            RegTests: [],
+                                            UnregTests: [],
+                                            IneligibleTests: res1,
+                                            OldTests: res2,
+                                            Placed: "Yes"
+                                        }, function(err1, html1){
+                                            response.render('header', {
+                                                username: req.session.username,
+                                            }, function(err2, html2) {
+                                                response.render('template', {
+                                                    header: html2,
+                                                    body: html1
                                                 });
-                                            })
-                                        }
-                                    });
-                                }
-                            });
-                        }
-                    });
+                                            });
+                                        });
+                                    }
+                                });
+                            }
+                            
+                        });
+                    }
                 }
             });
         }
@@ -199,6 +251,7 @@ module.exports =
 
                                 response.render('dashboardSpc', {
                                     username: result[0].username,
+                                    USN: result[0].USN,
                                     Department: dept,
                                     Username: req.session.username,
                                     Tests: result2

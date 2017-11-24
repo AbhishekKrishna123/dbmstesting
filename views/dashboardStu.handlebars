@@ -17,18 +17,18 @@
             </ul> --}}
             {{#each UnregTests}}
                 <div class="card center container" style="padding: 2em; margin-left: auto; margin-right: auto;">
-                    <h4 class="blue-text">{{this.Name}}</h4>
+                    <h4 class="orange-text">{{this.Name}}</h4>
                     <div class="row center">
-                        <h6 class=" center grey-text col s12">by {{this.CompanyName}}</h6>
+                        <h6 class=" center white-text col s12">by {{this.CompanyName}}</h6>
                     </div>
                     <div class="row">
-                        <p class="grey-text col s6">Date: {{this.TestDate}}</p>
-                        <p class="grey-text col s6">Time: {{this.TestTime}}</p>
-                        <p class="grey-text col s6">Location: {{this.Location}}</p>
-                        <p class="grey-text col s6">Cut-Off: {{this.CutOffGPA}}</p>
+                        <p class="white-text col s6">Date: {{this.TestDate}}</p>
+                        <p class="white-text col s6">Time: {{this.TestTime}}</p>
+                        <p class="white-text col s6">Location: {{this.Location}}</p>
+                        <p class="white-text col s6">Cut-Off: {{this.CutOffGPA}}</p>
                     </div>
                     <div class="row">
-                        <i class="grey-text">Status:</i>
+                        <i class="white-text">Status:</i>
                         <i style = "color: red">Not Registered!</i>
                     </div>
                     <button class="waves-effect waves-light btn green" onclick = "reg(this)" name = {{this.TestID}}> Register </button>
@@ -37,20 +37,20 @@
             {{/each}}
 
             {{#each RegTests}}
-                <div class="card center container" style="padding: 2em; margin-left: auto; margin-right: auto;">
-                    <h4 class="blue-text">{{this.Name}}</h4>
+                <div class="card blue-grey darken-3 center container" style="padding: 2em; margin-left: auto; margin-right: auto;">
+                    <h4 class="orange-text">{{this.Name}}</h4>
                     <div class="row center">
-                        <h6 class=" center grey-text col s12">by {{this.CompanyName}}</h6>
+                        <h6 class=" center white-text col s12">by {{this.CompanyName}}</h6>
                     </div>
                     <div class="row">
-                        <p class="grey-text col s6">Date: {{this.TestDate}}</p>
-                        <p class="grey-text col s6">Time: {{this.TestTime}}</p>
-                        <p class="grey-text col s6">Location: {{this.Location}}</p>
-                        <p class="grey-text col s6">Cut-Off: {{this.CutOffGPA}}</p>
+                        <p class="white-text col s6">Date: {{this.TestDate}}</p>
+                        <p class="white-text col s6">Time: {{this.TestTime}}</p>
+                        <p class="white-text col s6">Location: {{this.Location}}</p>
+                        <p class="white-text col s6">Cut-Off: {{this.CutOffGPA}}</p>
                     </div>
                     <div class="row">
-                        <i class="grey-text">Status:</i>
-                        <i style = "color: green">Registered!</i>
+                        <i class="white-text">Status:</i>
+                        <i style = "color: rgb(18, 187, 18)">Registered!</i>
                     </div>
                     <button class="waves-effect waves-light btn red" onclick = "unreg(this)" name = {{this.TestID}}> Unregister </button>
 
@@ -58,38 +58,42 @@
             {{/each}}
 
             {{#each IneligibleTests}}
-                <div class="card center container" style="padding: 2em; margin-left: auto; margin-right: auto;">
-                    <h4 class="blue-text">{{this.Name}}</h4>
+                <div class="card blue-grey darken-3 center container" style="padding: 2em; margin-left: auto; margin-right: auto;">
+                    <h4 class="orange-text">{{this.Name}}</h4>
                     <div class="row center">
-                        <h6 class=" center grey-text col s12">by {{this.CompanyName}}</h6>
+                        <h6 class=" center white-text col s12">by {{this.CompanyName}}</h6>
                     </div>
                     <div class="row">
-                        <p class="grey-text col s6">Date: {{this.TestDate}}</p>
-                        <p class="grey-text col s6">Time: {{this.TestTime}}</p>
-                        <p class="grey-text col s6">Location: {{this.Location}}</p>
-                        <p class="grey-text col s6">Cut-Off: {{this.CutOffGPA}}</p>
+                        <p class="white-text col s6">Date: {{this.TestDate}}</p>
+                        <p class="white-text col s6">Time: {{this.TestTime}}</p>
+                        <p class="white-text col s6">Location: {{this.Location}}</p>
+                        <p class="white-text col s6">Cut-Off: {{this.CutOffGPA}}</p>
                     </div>
                     <div class="row">
-                        <i class="grey-text">Status:</i>
-                        <i style = "color: grey">Cannot register!</i>
+                        <i class="white-text">Status:</i>
+                        <i style = "color: rgb(172, 172, 172)">Cannot register!</i>
                     </div>
-                    <button class="waves-effect waves-light btn grey" name = {{this.TestID}}> Inadequate GPA </button>
-
+                    
+                    {{!-- {{#else}} <button class="waves-effect waves-light btn grey" name = {{this.TestID}}> Inadequate GPA </button> {{/else}} --}}
                 </div>
             {{/each}}
 
-            <h4 class="red-text center">Previous Tests</h4>
+            
+
+            <div class="divider"></div>
+
+            <h4 class="teal-text center">Previous Tests</h4>
             {{#each OldTests}}
-                <div class="card center container" style="padding: 2em; margin-left: auto; margin-right: auto;">
-                    <h4 class="blue-text">{{this.Name}}</h4>
+                <div class="card blue-grey darken-3 center container" style="padding: 2em; margin-left: auto; margin-right: auto;">
+                    <h4 class="orange-text">{{this.Name}}</h4>
                     <div class="row center">
-                        <h6 class=" center grey-text col s12">by {{this.CompanyName}}</h6>
+                        <h6 class=" center white-text col s12">by {{this.CompanyName}}</h6>
                     </div>
                     <div class="row">
-                        <p class="grey-text col s6">Date: {{this.TestDate}}</p>
-                        <p class="grey-text col s6">Time: {{this.TestTime}}</p>
-                        <p class="grey-text col s6">Location: {{this.Location}}</p>
-                        <p class="grey-text col s6">Cut-Off: {{this.CutOffGPA}}</p>
+                        <p class="white-text col s6">Date: {{this.TestDate}}</p>
+                        <p class="white-text col s6">Time: {{this.TestTime}}</p>
+                        <p class="white-text col s6">Location: {{this.Location}}</p>
+                        <p class="white-text col s6">Cut-Off: {{this.CutOffGPA}}</p>
                     </div>
                     <div class="row center">
                         {{#if this.Selected}}
@@ -106,7 +110,7 @@
         <div class="col s12 l6" style="padding-left: 3em;">
             <h4 class="teal-text center">Here are your details</h4>
             <br>
-            <table class="bordered highlight centered responsive-table">
+            <table class="bordered highlight centered responsive-table"  style = "display:block; overflow: scroll; height: 300px">
                 <thead>
                     <tr>
                         <th>
@@ -225,6 +229,8 @@
                 </tbody>
             </table>
         </div>
+
+        {{#if Placed}} <button class="waves-effect waves-light btn grey" name = {{this.TestID}}> Already Placed </button> {{/if}}
 
     </section>
 
