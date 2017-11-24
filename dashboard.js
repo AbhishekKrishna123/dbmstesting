@@ -222,7 +222,20 @@ module.exports =
 
         else if(role == 4)
         {
-            response.render('dashboardPlacementCell');
+            var test_query = "SELECT * FROM TEST, COMPANY WHERE TEST.COMPANYID = COMPANY.COMPANYID;";
+
+            connection.query(test_query, function(error, result){
+
+                if(error)
+                {
+                    console.log("\n---------------------------\nBackend Error: Unable to retrieve test details for dashboard\n---------------------------\n");
+                }
+
+                else
+                {
+                    response.render('dashboardPlacementCell', {Tests: result});
+                }
+            });  
         }
     }
 }
