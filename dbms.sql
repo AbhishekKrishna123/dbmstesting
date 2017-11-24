@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 24, 2017 at 01:52 PM
+-- Generation Time: Nov 24, 2017 at 07:20 PM
 -- Server version: 10.1.19-MariaDB
 -- PHP Version: 5.6.28
 
@@ -133,13 +133,20 @@ CREATE TABLE `faculty` (
 
 CREATE TABLE `offer` (
   `USN` varchar(15) NOT NULL,
-  `TestID` int(11) NOT NULL,
+  `CompanyID` int(11) NOT NULL,
   `Location` varchar(255) DEFAULT NULL,
   `Compensaation` int(11) DEFAULT NULL,
   `Profile` varchar(255) DEFAULT NULL,
   `Details` varchar(255) DEFAULT NULL,
   `Accepted` varchar(3) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `offer`
+--
+
+INSERT INTO `offer` (`USN`, `CompanyID`, `Location`, `Compensaation`, `Profile`, `Details`, `Accepted`) VALUES
+('1RV15CS013', 15, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -179,7 +186,8 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`session_id`, `expires`, `data`) VALUES
-('ZGSTgECKtr0w-O53J99y_uC3YjlOsA-K', 1511614345, '{"cookie":{"originalMaxAge":null,"expires":null,"httpOnly":true,"path":"/"},"username":"csespc001","role":3}'),
+('5DRBb2zLObOud_zwtn6UqktcVemJeS69', 1511633847, '{"cookie":{"originalMaxAge":null,"expires":null,"httpOnly":true,"path":"/"},"username":"rvceplacement","role":4}'),
+('EBdBhrUjxqj4DiJOpeMgzQG6Adx8BBUL', 1511628651, '{"cookie":{"originalMaxAge":null,"expires":null,"httpOnly":true,"path":"/"},"username":"rvceplacement","role":4}'),
 ('yDnGVT8hCnfmzDY6faYFAsf_xiyXHKky', 1511608695, '{"cookie":{"originalMaxAge":null,"expires":null,"httpOnly":true,"path":"/"},"username":"csespc001","role":3}');
 
 -- --------------------------------------------------------
@@ -235,6 +243,7 @@ CREATE TABLE `student` (
   `SGPA7` double DEFAULT NULL,
   `SGPA8` double DEFAULT NULL,
   `CGPA` double DEFAULT NULL,
+  `Placed` varchar(3) NOT NULL DEFAULT 'No',
   `Password` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -242,8 +251,8 @@ CREATE TABLE `student` (
 -- Dumping data for table `student`
 --
 
-INSERT INTO `student` (`USN`, `FirstName`, `MiddleName`, `LastName`, `DOB`, `EmailID`, `MobileNumber`, `Address`, `Gender`, `Department`, `Section`, `StudentType`, `DiplomaStudent`, `Semester`, `Marks10th`, `Marks12th`, `Board10th`, `Board12th`, `SGPA1`, `SGPA2`, `SGPA3`, `SGPA4`, `SGPA5`, `SGPA6`, `SGPA7`, `SGPA8`, `CGPA`, `Password`) VALUES
-('1RV15CS013', 'Aditya', NULL, 'Giridharan', '1997-09-07', 'aditya.giridharan@gmail.com', '8861162591', 'A4 1203 ELITA PROMENADE, 18TH MAIN, J.P NAGAR 7TH PHASE', 'Male', 5, 'A', 'UG', 'No', 5, 98, 98, NULL, NULL, 9, 9, 9, 9, NULL, NULL, NULL, NULL, 9.57, 'password1');
+INSERT INTO `student` (`USN`, `FirstName`, `MiddleName`, `LastName`, `DOB`, `EmailID`, `MobileNumber`, `Address`, `Gender`, `Department`, `Section`, `StudentType`, `DiplomaStudent`, `Semester`, `Marks10th`, `Marks12th`, `Board10th`, `Board12th`, `SGPA1`, `SGPA2`, `SGPA3`, `SGPA4`, `SGPA5`, `SGPA6`, `SGPA7`, `SGPA8`, `CGPA`, `Placed`, `Password`) VALUES
+('1RV15CS013', 'Aditya', NULL, 'Giridharan', '1997-09-07', 'aditya.giridharan@gmail.com', '8861162591', 'A4 1203 ELITA PROMENADE, 18TH MAIN, J.P NAGAR 7TH PHASE', 'Male', 5, 'A', 'UG', 'No', 5, 98, 98, NULL, NULL, 9, 9, 9, 9, NULL, NULL, NULL, NULL, 9.57, 'Yes', 'password1');
 
 -- --------------------------------------------------------
 
@@ -341,8 +350,8 @@ ALTER TABLE `faculty`
 -- Indexes for table `offer`
 --
 ALTER TABLE `offer`
-  ADD PRIMARY KEY (`USN`,`TestID`),
-  ADD KEY `FKOffer62939` (`TestID`),
+  ADD PRIMARY KEY (`USN`,`CompanyID`),
+  ADD KEY `FKOffer62939` (`CompanyID`),
   ADD KEY `FKOffer226003` (`USN`);
 
 --
@@ -448,7 +457,7 @@ ALTER TABLE `faculty`
 --
 ALTER TABLE `offer`
   ADD CONSTRAINT `FKOffer226003` FOREIGN KEY (`USN`) REFERENCES `student` (`USN`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `FKOffer62939` FOREIGN KEY (`TestID`) REFERENCES `test` (`TestID`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `FKOffer62939` FOREIGN KEY (`CompanyID`) REFERENCES `company` (`CompanyID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `register`
