@@ -17,11 +17,17 @@
     </head>
     <body>
 
-        <nav class="blue">
-            <div class="nav-wrapper container">
-                <a href="#" class="brand-logo center">Placement System</a>
+        <nav class="teal">
+            <div class="nav-wrapper">
+                <a href="/dashboard" class="brand-logo center">Career Portal</a>
+                <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
                 <ul id="nav-mobile" class="right hide-on-med-and-down">
-                    <li><a href="">Logged in as Placement Cell, RVCE</a></li>
+                    <li><a></a>Logged in as Placement Cell, RVCE </a></li>
+                    <li><a href="/logout">Logout</a></li>
+                </ul>
+                <ul class="side-nav" id="mobile-demo">
+                    <li><a href="/dashboard" class="active">Dashboard</a></li>
+                    <li><a href="/logout">Logout</a></li>
                 </ul>
             </div>
         </nav>
@@ -31,32 +37,20 @@
         </section>
 
     <section class="container" style="margin-top: 5em">
-
-        <div class="center">
-            <br>
-            <a class="waves-effect waves-light btn teal" href="/add_company"> Add Company </a>
+        <div class="row">
+            <div class="col s3">
+                <a class="waves-effect waves-light btn teal" href="/add_company"> Add New Company </a>
+            </div>
+            <div class="col s3">
+                <a class="waves-effect waves-light btn teal" href="/add_company_test"> Add Company Test </a>
+            </div>
+            <div class="col s3">
+                <a class="waves-effect waves-light btn teal" href="/password_change"> Change Password </a>
+            </div>
+            <div class="col s3">
+                <a class="waves-effect waves-light btn teal" href="/logout"> Logout </a>
+            </div>
         </div>
-
-        <div class="center">
-            <br>
-            <a class="waves-effect waves-light btn teal" href="/add_company_test"> Add Company Test </a>
-        </div>
-
-         <div class="center">
-            <br>
-            <a class="waves-effect waves-light btn teal" href="/password_change"> Change Password </a>
-        </div>
-
-
-        <div class="center">
-            <br>
-            <a class="waves-effect waves-light btn teal" href="/logout">Logout</a>
-        </div>
-        
-
-
-
-
     </section>
 
     <br><br>

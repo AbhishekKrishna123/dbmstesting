@@ -17,21 +17,22 @@
     </head>
     <body>
 
-        <nav class="indigo darken-3">
+        <nav class="teal darken-2">
             <div class="nav-wrapper container">
-                <a href="#" class="brand-logo center">Placement System</a>
+                <a href="/dashboard" class="brand-logo center"> Career Portal </a>
                 <ul id="nav-mobile" class="right hide-on-med-and-down">
                     <li><a href="">Logged in as Administrator</a></li>
+                    <li><a href = "/logout"> Logout </a></li>
                 </ul>
             </div>
         </nav>
 
 
-    <section class="container" style="margin-top: 5em">
+    <section class="container center" style="margin-top: 5em">
 
         <h3> Users </h3>
 
-        <table class="bordered highlight ">
+        <table class="bordered highlight centered">
             <thead>
                 <tr>
                     <th>
@@ -53,7 +54,7 @@
                         <td> {{this.password}} </td>
                         <td> {{this.role}} </td>
 
-                        <td> <button class="waves-effect waves-light btn red" onclick = "removeUser(this)" name = {{this.username}}> Remove User </button> </td>
+                        <td> <button class="waves-effect waves-light btn red lighten-1" onclick = "removeUser(this)" name = {{this.username}}> Remove User </button> </td>
                     {{/if}}
                     </tr>
                 {{/each}}
@@ -63,7 +64,7 @@
 
     <br><br>
 
-    <section class = "container center">
+    {{!-- <section class = "container center">
         <a class="waves-effect waves-light btn green" href="/add_new_user"> Add New User </a>
     </section>
 
@@ -77,6 +78,20 @@
 
     <section class = "container center">
         <a class="waves-effect waves-light btn green" href="/logout"> Logout </a>
+    </section> --}}
+
+    <section class = "container">
+        <div class="row">
+            <div class="col s3 offset-s1">
+                <a class="waves-effect waves-light btn teal" href="/add_remove_users"> Add New User </a>
+            </div>
+            <div class="col s3 offset-s1">
+                <a class="waves-effect waves-light btn teal" href="/password_change"> Dashboard </a>
+            </div>
+            <div class="col s3 offset-s1">
+                <a class="waves-effect waves-light btn teal" href="/logout"> Logout </a>
+            </div>
+        </div>
     </section>
 
         <script src="js/vendor/modernizr-3.5.0.min.js"></script>

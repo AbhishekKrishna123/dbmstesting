@@ -30,7 +30,7 @@ module.exports =
 
                 if(err)
                 {
-                    throw err;
+                    console.log("\n---------------------------\nDashboard / Backend Error: Unable to retrieve student details\n---------------------------\n");
                 }
 
                 if(res.length == 0) 
@@ -95,7 +95,7 @@ module.exports =
                                                     OldTests: result_old
                                                 }, function(err1, html1){
                                                     response.render('header', {
-                                                        Details: res[0],
+                                                        username: req.session.username,
                                                     }, function(err2, html2) {
                                                         response.render('template', {
                                                             header: html2,
@@ -152,7 +152,7 @@ module.exports =
                             Department: dept
                         }, function(err1, html1){
                             response.render('header', {
-                                Details: res[0],
+                                username: req.session.username,
                             }, function(err2, html2) {
                                 response.render('template', {
                                     header: html2,
@@ -173,7 +173,7 @@ module.exports =
 
                 if(error)
                 {
-                    throw error;
+                    console.log("\n---------------------------\nBackend Error: Unable to retrieve spc details for dashboard\n---------------------------\n")
                 }
 
                 else 
@@ -198,14 +198,14 @@ module.exports =
                             connection.query(test_query, function(errid, result2) {
 
                                 response.render('dashboardSpc', {
-                                    USN: result[0].USN,
+                                    username: result[0].username,
                                     Department: dept,
                                     Username: req.session.username,
                                     Tests: result2
 
                                 }, function(err1, html1){
                                     response.render('header', {
-                                        Details: result[0],
+                                        username: req.session.username,
                                     }, function(err2, html2) {
                                         response.render('template', {
                                             header: html2,

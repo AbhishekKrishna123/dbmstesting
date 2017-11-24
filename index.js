@@ -138,8 +138,9 @@ app.get('/error', function(req, res){
 
 app.get('/password_change', function (req, res){
 
-    if (req.session.username) {
-        res.render('passwordChange');
+    if (req.session.username) 
+    {
+        res.render('passwordChange', {username: req.session.username});
     }
     else 
     {
@@ -296,9 +297,7 @@ app.get('/add_company_test', function(req, res){
                 
                 //console.log(result2[0]);
                 
-                res.render('header', {
-                    Details: {USN: req.session.username}
-                }, function(err1, html1) {
+                res.render('header', {username: req.session.username}, function(err1, html1) {
                     res.render('addCompanyTest', {Companies: companyNames, Departments: result2}, function(err2, html2) {
                         res.render('template', { header: html1 , body:html2 })
                     });
@@ -382,7 +381,7 @@ app.get('/add_test_result', function(req, res){
             }
             else
             {
-                res.render('addTestResult', {Tests: result});
+                res.render('addTestResult', {Tests: result, username: req.session.username});
             }
         });
     }
@@ -410,7 +409,7 @@ app.post('/add_test_result', urlEncodedParser, function(req, res){
         {
             //console.log("STUDENTS\n\n" + result.length);
 
-            res.render('header', {USN: req.session.username}, function(err, html) {
+            res.render('header', {username: req.session.username}, function(err, html) {
                 res.render('addSelectedStudents', {Students: result}, function(err2, html2) {
                     res.render('template', {header: html, body: html2});
                 });
@@ -426,13 +425,14 @@ app.post('/add_selected_students', urlEncodedParser, function(req, res){
     //console.log(req.body);
     
     var usnList = req.body.list.split(" ");
+    console.log(usnList[0]);
     var register_query = "";
     
     for (i = 0; i <usnList.length-1; i++) {
-        register_query += "UPDATE REGISTER SET `SELECTED` = 'YES' WHERE USN = '" + usnList[i] + "' AND TESTID = 37; ";
+        register_query += "UPDATE REGISTER SET SELECTED = 'YES' WHERE USN = '" + usnList[i] + "' AND TESTID = 13; ";
     }
     
-    //console.log(query);
+    console.log(register_query);
     
     connection.query(register_query, function(error, result){
         if (error)
@@ -477,14 +477,14 @@ app.get("/report", function(req, res) {
                     worksheet.addRow([result[i].USN, result[i].TestID, result[i].Selected]);
                 }
     
-                workbook.xlsx.writeFile("C:/Users/Abhishek/Documents/5th Semester/DBMS/Report.xlsx")
+                workbook.xlsx.writeFile("Report.xlsx")
                 .then(function() {
                     "File saved!";
                 });
             }
         });
 
-        res.redirect("/");
+        res.redirect("/dashboard");
     }
 
     else
@@ -665,7 +665,7 @@ app.get('/test', function(req, res) {
         
         connection.query(query2, function(err2, result2) {
             
-            res.render('header', {USN: req.session.username}, function(err, html) {
+            res.render('header', {username: req.session.username}, function(err, html) {
                 res.render('test', {Test: result2, Reg: result1}, function(err2, html2) {
                     res.render('template', {header: html, body: html2});
                 });
@@ -682,7 +682,7 @@ app.get('/offer', function(req, res) {
         
         connection.query(query2, function(err2, result2) {
             
-            res.render('header', {USN: req.session.username}, function(err, html) {
+            res.render('header', {username: req.session.username}, function(err, html) {
                 res.render('offer', {Test: result2, Reg: result1}, function(err2, html2) {
                     res.render('template', {header: html, body: html2});
                 });

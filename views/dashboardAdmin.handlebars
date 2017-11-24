@@ -11,15 +11,15 @@
         <link rel="apple-touch-icon" href="icon.png">
         <!-- Place favicon.ico in the root directory -->
 
-        <link rel="stylesheet" href="css/normalize.css">
-        <link rel="stylesheet" href="css/main.css">
-        <link rel="stylesheet" href="./materialize/css/materialize.min.css">
+        {{!-- <link rel="stylesheet" href="css/normalize.css">
+        <link rel="stylesheet" href="css/main.css"> --}}
+        <link rel="stylesheet" href="materialize/css/materialize.min.css">
     </head>
     <body>
 
-        <nav class="indigo darken-3">
+        <nav class="teal darken-2">
             <div class="nav-wrapper container">
-                <a href="#" class="brand-logo center">Placement System</a>
+                <a href="/dashboard" class="brand-logo center"> Career Portal </a>
                 <ul id="nav-mobile" class="right hide-on-med-and-down">
                     <li><a href="">Logged in as Administrator</a></li>
                 </ul>
@@ -32,21 +32,18 @@
 
         <section class="container" style="margin-top: 5em">
 
-            <div class="center">
-                <br><br>
-                <a class="waves-effect waves-light btn teal" href="/add_remove_users"> Add or Remove Users </a>
+            <div class="row">
+                <div class="col s3">
+                    <a class="waves-effect waves-light btn teal" href="/add_remove_users"> Add/Remove Users </a>
+                </div>
+                <div class="col s3">
+                    <a class="waves-effect waves-light btn teal" href="/password_change"> Change Password </a>
+                </div>
+                <div class="col s3">
+                    <a class="waves-effect waves-light btn teal" href="/logout"> Logout </a>
+                </div>
             </div>
 
-
-            <div class="center">
-                <br><br>
-                <a class="waves-effect waves-light btn teal" href="/password_change"> Change Password </a>
-            </div>
-
-            <div class="center">
-                <br><br>
-                <a class="waves-effect waves-light btn teal" href="/logout"> Logout </a>
-            </div>
 
 
 
@@ -56,6 +53,7 @@
 
     <br><br>
 
+        <script src = "materialize/js/materialize.js"></script>
         <script src="js/vendor/modernizr-3.5.0.min.js"></script>
         <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-3.2.1.min.js"><\/script>')</script>

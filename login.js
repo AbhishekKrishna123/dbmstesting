@@ -18,6 +18,11 @@ module.exports =
         
         connection.query(user_query, function(err, res, fields){
 
+            if (err)
+            {
+                console.log("\n---------------------------\nBackend Error: Unable to get user password for login\n---------------------------\n")
+            }
+
             if(res.length == 0) 
             {
                 console.log("\n---------------------------\nLogin Error: User not found\n---------------------------\n");

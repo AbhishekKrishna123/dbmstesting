@@ -4,21 +4,30 @@
     </header>
 
     <div>
-        {{!-- <form method="post" action="/add_selected_students"> --}}
+        {{#each Students}}
+        <p>
+            <input type="checkbox" id="{{this.USN}}" />
+            <label for="{{this.USN}}">{{this.USN}}: {{this.FirstName}} {{this.LastName}}</label>
+        </p>
+        {{/each}}
 
-                    {{#each Students}}
-                    <p>
-                        <input type="checkbox" id="{{this.USN}}" />
-                        <label for="{{this.USN}}">{{this.USN}}: {{this.FirstName}} {{this.LastName}}</label>
-                    </p>
-                    {{/each}}
-
-            <div class="row uniform">
-                <button class="waves-effect waves-light btn teal" onclick="sendStudentList();" id="submit">Add Students</button>
-            </div>
-        {{!-- </form> --}}
+        <div class="row uniform">
+            <button class="waves-effect waves-light btn teal" onclick="sendStudentList();" id="submit">Add Students</button>
+        </div>
     </div>
+
+    <div class="row">
+        <div class="col s3 offset-s2">
+            <a class="waves-effect waves-light btn teal" href="/dashboard"> Dashboard </a>
+        </div>
+        <div class="col s3 offset-s2">
+            <a class="waves-effect waves-light btn teal" href="/logout"> Logout </a>
+        </div>
+    </div>
+
 </section>
+
+
 
 
 <!-- Scripts -->
@@ -30,7 +39,7 @@
         var studentList = "";
         var arr = [];
         $('input[type="checkbox"]').filter(':checked').each(
-            function() {
+            function () {
                 studentList += this.id + " ";
             }
         );
@@ -42,21 +51,23 @@
             url: "/add_selected_students",
             //contentType: "json",
             dataType: "json",
-            data: {list: studentList},
-            success: function() 
-            {
+            data: {
+                list: studentList
+            },
+            success: function () {
                 //console.log("AJAX done");
                 window.location = "/";
             },
-            error: function() 
-            {
-                console.log("\n---------------------------\nAJAX Error: Unable to send Student List\n---------------------------\n");
+            error: function () {
+                console.log(
+                    "\n---------------------------\nAJAX Error: Unable to send Student List\n---------------------------\n"
+                );
             }
 
         });
     }
-
 </script>
 
 </body>
+
 </html>
