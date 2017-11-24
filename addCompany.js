@@ -25,6 +25,7 @@ module.exports =
             if(err)
             {
                 console.log("\n---------------------------\nBackend Error: Unable to insert into table Company\n---------------------------\n")
+                res.render('error');                
             }
             else
             {

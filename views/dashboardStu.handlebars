@@ -247,7 +247,7 @@
 
             function reg(obj)
             {
-                console.log("Reg Function called");
+                //console.log("Reg Function called");
                 var testID = obj.name;
                 $.ajax({
                     url: '/test_register',
@@ -257,7 +257,7 @@
 
                     success: function(data)
                     {
-                        console.log("DATA SENT\n" + data);
+                        //console.log("DATA SENT\n" + data);
                         setTimeout(function(){// wait for 5 secs(2)
                             location.reload(); // then reload the page.(3)
                         }, 2000);
@@ -266,7 +266,7 @@
 
                     error: function(jqXHR, textstatus, err)
                     {
-                        console.log("ERROR");
+                        console.log("\n---------------------------\nAJAX Error: Unable to register for test\n---------------------------\n");
                     }
 
                 });
@@ -274,7 +274,7 @@
 
             function unreg(obj)
             {
-                console.log("Unreg function called");
+                //console.log("Unreg function called");
                 var testID = obj.name;
                 $.ajax({
                     url: '/test_unregister',
@@ -284,7 +284,7 @@
 
                     success: function(obj)
                     {
-                        console.log("SUCCESS UNREG");
+                        //console.log("SUCCESS UNREG");
                         setTimeout(function(){// wait for 5 secs(2)
                             location.reload(); // then reload the page.(3)
                         }, 100);
@@ -292,8 +292,7 @@
 
                     error: function(jqXHR, textstatus, err)
                     {
-                        console.log("ERROR UNREG");
-
+                        console.log("\n---------------------------\nAJAX Error: Unable to un-register for test\n---------------------------\n");
                     }
                 });
             }

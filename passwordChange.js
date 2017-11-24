@@ -30,6 +30,7 @@ module.exports =
             if(err) 
             {
                 console.log("\n---------------------------\n Backend Error: Unable to retrieve details for current user\n---------------------------\n");
+                res.render('error');
             }
 
             else
@@ -43,7 +44,7 @@ module.exports =
                         if(error)
                         {
                             console.log("\n---------------------------\n Backend Error: Unable to update password\n---------------------------\n");
-                            
+                            res.render('error');
                         }
                         else 
                         {

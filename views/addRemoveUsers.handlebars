@@ -89,8 +89,7 @@
 
             function removeUser(obj)
             {
-                //alert("Sure?");
-                console.log("Remove User Function Called!");
+                //console.log("Remove User Function Called!");
                 var username = obj.name;
                 $.ajax({
                     url: '/remove_user',
@@ -100,7 +99,7 @@
 
                     success: function(obj)
                     {
-                        console.log("SUCCESS UNREG");
+                        //console.log("SUCCESS UNREG");
                         setTimeout(function(){// wait for 5 secs(2)
                             location.reload(); // then reload the page.(3)
                         }, 100);
@@ -108,8 +107,8 @@
 
                     error: function(jqXHR, textstatus, err)
                     {
-                        console.log("ERROR DELETING USER!");
-
+                        console.log("\n---------------------------\nAJAX Error: Unable to Remove User\n---------------------------\n");
+                        
                     }
                 });
             }

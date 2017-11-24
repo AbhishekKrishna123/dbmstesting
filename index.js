@@ -98,14 +98,15 @@ app.get('/dashboard', function(req, res) {
         if(req.session.username[0] == '1')
         {
             var dept_query = "SELECT * FROM DEPARTMENT WHERE DEPARTMENTID IN (SELECT DEPARTMENT FROM STUDENT WHERE USN = '" + req.session.username + "');";
+            
             connection.query(dept_query, function(error, result){
                 if(error)
                 {
-                    throw error;
+                    console.log("\n---------------------------\nDashboard Error: Unable to retrieve Department ID\n---------------------------\n")
+                    res.render('error');
                 }
                 else
                 {
-                    console.log(result[0].DepartmentID);
                     var dashboard = require("./dashboard.js");
                     dashboard.Dashboard(connection, req, res, result[0].DepartmentID);
                 }
@@ -168,7 +169,7 @@ app.get('/logout', function(req, res)
 
 
 app.get('/register', function(req, res){
-    
+
     connection.query("SELECT * FROM DEPARTMENT;", function(error, result){
         if (error)
         {
@@ -196,7 +197,6 @@ app.post('/register', urlEncodedParser, function(req, res){
 
 app.post('/test_register', urlEncodedParser, function(req, res){
     
-    console.log("ID" + req.body.ID);
     var body = req.body;
     
     var insertVals =
@@ -208,13 +208,12 @@ app.post('/test_register', urlEncodedParser, function(req, res){
     connection.query("INSERT INTO REGISTER SET ?", insertVals, function(error, result){
         if(error)
         {
-            console.log("ERROR");
-            throw error;
+            console.log("\n---------------------------\nBackend Error: Unable to insert into table Register\n---------------------------\n");
+            res.render('error');
         }
     
         else
         {
-            console.log("TESTREG SUCCESS");
             res.send({status: 200});
         }
     });
@@ -225,15 +224,16 @@ app.post('/test_register', urlEncodedParser, function(req, res){
 app.post('/test_unregister', urlEncodedParser, function(req, res)
 {
     var delete_query = "DELETE FROM REGISTER WHERE USN = '" + req.session.username + "' AND TESTID = '" + req.body.ID + "';";
+    
     connection.query(delete_query, function(error, result)
     {
         if(error)
         {
-            throw error;
+            console.log("\n---------------------------\nBackend Error: Unable to delete from table Register\n---------------------------\n");
+            res.render('error');
         }
         else
         {
-            console.log("UNREG SUCCESS!");
             res.send({status: 200});
         }
     });
@@ -255,7 +255,7 @@ app.get('/add_company_test', function(req, res){
 
         connection.query("SELECT * FROM COMPANY", function(err1, result1){
 
-            console.log("\n\nCOM LIST: " + result1[0].CompanyName + "\n\n");
+            //console.log("\n\nCOM LIST: " + result1[0].CompanyName + "\n\n");
 
             var companyNames = [];
             for(var i=0, l=result1.length; i<l; i++) {
@@ -263,12 +263,12 @@ app.get('/add_company_test', function(req, res){
                 companyNames.push(result1[i].CompanyName);
             }
 
-            console.log(companyNames);
-            //var comList = {companies: companyNames};
-
-            //res.render('addCompanyTest', {Companies: companyNames});
+            //console.log(companyNames);
+            
             connection.query("SELECT * FROM DEPARTMENT", function(error2, result2){
-                console.log(result2[0]);
+                
+                //console.log(result2[0]);
+                
                 res.render('header', {
                     Details: {USN: req.session.username}
                 }, function(err1, html1) {
@@ -276,9 +276,7 @@ app.get('/add_company_test', function(req, res){
                         res.render('template', { header: html1 , body:html2 })
                     });
                 })
-
             });
-
         });
     }
 
@@ -297,13 +295,17 @@ app.post('/add_company_test', urlEncodedParser, function(req, res){
     var body = req.body;
     var companyName = body.companyname;
 
-    console.log("FORM CNAME = " + companyName);
-
-    connection.query("SELECT * FROM COMPANY WHERE COMPANYNAME LIKE '" + companyName + "%';", function(error, result){
-        if (error) throw error;
+    //console.log("FORM CNAME = " + companyName);
+    var company_details_query = "SELECT * FROM COMPANY WHERE COMPANYNAME LIKE '" + companyName + "%';" ;
+    connection.query(company_details_query, function(error, result){
+        
+        if (error)
+        {
+            console.log("\n---------------------------\nBackend Error: Unable to retrieve company details from table Company\n---------------------------\n");
+            res.render('error');
+        }
         else
         {
-            console.log(result);
             var companyID = result[0].CompanyID;
             addCompanyTest.addTest(req, res, connection, companyID);
         }
@@ -324,6 +326,7 @@ app.get('/add_company', function(req, res){
 //--------------------------------------------------------------------------------------------
 
 app.post('/add_company', urlEncodedParser, function(req, res){
+
     var addCompany = require('./addCompany.js');
     addCompany.addCompany(req, res, connection);
 });
@@ -338,12 +341,14 @@ app.get('/add_test_result', function(req, res){
         var currentDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
         
         var query_test = "SELECT * FROM TEST WHERE TESTDATE < '" + currentDate + "';";
-        console.log(currentDate);
+
+        //console.log(currentDate);
         
         connection.query(query_test, function(error, result){
             if (error)
             {
-                console.log("Error");
+                console.log("\n---------------------------\nBackend Error: Unable to retrieve test details from Test\n---------------------------\n");
+                res.render('error');
             }
             else
             {
@@ -368,11 +373,13 @@ app.post('/add_test_result', urlEncodedParser, function(req, res){
     connection.query(query_student, function(error, result){
         if (error)
         {
-            console.log("Error");
+            console.log("\n---------------------------\nBackend Error: Unable to retrieve list of registered students\n---------------------------\n");
+            res.render('error');
         }
         else
         {
-            console.log("STUDENTS\n\n" + result.length);
+            //console.log("STUDENTS\n\n" + result.length);
+
             res.render('header', {USN: req.session.username}, function(err, html) {
                 res.render('addSelectedStudents', {Students: result}, function(err2, html2) {
                     res.render('template', {header: html, body: html2});
@@ -386,27 +393,25 @@ app.post('/add_test_result', urlEncodedParser, function(req, res){
 
 app.post('/add_selected_students', urlEncodedParser, function(req, res){
     
-    console.log(req.body);
+    //console.log(req.body);
     
     var usnList = req.body.list.split(" ");
-    var query = "";
+    var register_query = "";
     
     for (i = 0; i <usnList.length-1; i++) {
-        query += "UPDATE REGISTER SET `SELECTED` = 'YES' WHERE USN = '" + usnList[i] + "' AND TESTID = 37; ";
+        register_query += "UPDATE REGISTER SET `SELECTED` = 'YES' WHERE USN = '" + usnList[i] + "' AND TESTID = 37; ";
     }
     
-    console.log(query);
+    //console.log(query);
     
-    connection.query(query, function(error, result){
+    connection.query(register_query, function(error, result){
         if (error)
         {
-            console.log("Error");
-            //res.sendStatus(500);
+            console.log("\n---------------------------\nBackend Error: Unable to update table Register to add selected students\n---------------------------\n");
+            res.render('error');
         }
         else
         {
-            console.log("success " + result.length);
-            //res.sendStatus(200);
             res.send({status: 200});
         }
     });   
@@ -419,11 +424,17 @@ app.get("/report", function(req, res) {
     if(req.session.username && req.session.role != 1)
     {
         var query = "SELECT * FROM REGISTER";
+
         connection.query(query, function(err, result) {
-            if (err) {
-                console.log(err);
+
+            if (err) 
+            {
+                console.log("\n---------------------------\nBackend Error: Unable to retrieve list of registered students\n---------------------------\n");
+                res.render('error');
             }
-            else {
+            
+            else 
+            {
                 var workbook = new xl.Workbook();
                 var worksheet = workbook.addWorksheet('Register Report');
                 worksheet.columns = [
@@ -466,7 +477,8 @@ app.get('/add_remove_users', function(req, res)
         {
             if (error)
             {
-                throw error;
+                console.log("\n---------------------------\nBackend Error: Unable to retrieve list of users for admin\n---------------------------\n")
+                res.render('error');
             }
             else
             {
@@ -484,15 +496,16 @@ app.post('/remove_user', urlEncodedParser, function(req, res){
 
     var body = req.body;
     var del_query = "DELETE FROM USER WHERE USERNAME = '" + body.username + "';";
+
     connection.query(del_query, function(error, result)
     {
         if(error)
         {
-            throw error;
+            console.log("\n---------------------------\nBackend Error: Unable to delete user\n---------------------------\n")
+            res.render('error');
         }
         else
         {
-            console.log("DELETED USER SUCCESSFULLY!");
             res.send({status: 200});
         }
     });
@@ -509,7 +522,8 @@ app.get('/add_new_user', function(req, res)
         {
             if(error)
             {
-                throw error;
+                console.log("\n---------------------------\nBackend Error: Unable to get list of departments to add new user\n---------------------------\n")
+                res.render('error');
             }
             else
             {
@@ -527,7 +541,6 @@ app.post('/add_new_user', urlEncodedParser, function(req, res)
 {
     var role;
     var body = req.body;
-    //if (body.role == "admin") role = 0;
     if(body.role == "faculty") role = 2;
     else if(body.role == "spc") role = 3;
 
@@ -538,16 +551,15 @@ app.post('/add_new_user', urlEncodedParser, function(req, res)
     };
 
     connection.query("INSERT INTO USER SET ?", insertVals, function(error, result){
+
         if(error)
         {
-            console.log("ERROR");
-            throw error;
+            console.log("\n---------------------------\nBackend Error: Unable to insert new user\n---------------------------\n");
+            res.render('error');
         }
 
         else
         {
-            console.log("NEW USER ADDED SUCCESS");
-
             if(role == 2)
             {
                 var newInsert =
@@ -559,16 +571,15 @@ app.post('/add_new_user', urlEncodedParser, function(req, res)
                     MobileNumber: body.mobile
                 }
 
-                console.log("FAC DEPT + body.department");
                 connection.query("INSERT INTO FACULTY SET ?", newInsert, function(err2, result2){
+
                     if(err2)
                     {
+                        console.log("\n---------------------------\nBackend Error: Unable to insert new faculty user\n---------------------------\n")
                         res.render('error');
-                        //console.log(err);
-
                     }
-                    else{
-                        console.log("ADDED NEW FAC");
+                    else
+                    {
                         res.redirect('/');
                     }
                 });
@@ -583,13 +594,14 @@ app.post('/add_new_user', urlEncodedParser, function(req, res)
                     Username: body.username
                 }
                 connection.query("INSERT INTO SPC SET ?", newInsert, function(err2, result2){
+                    
                     if(err2)
                     {
-                        console.log(err2);
+                        console.log("\n---------------------------\nBackend Error: Unable to insert new SPC user\n---------------------------\n");
                         res.render('error');
                     }
-                    else{
-                        console.log("ADDED NEW SPC");
+                    else
+                    {
                         res.redirect('/');
                     }
                 });
@@ -608,14 +620,13 @@ app.post('/add_new_user', urlEncodedParser, function(req, res)
 
 app.get('/test', function(req, res) {
 
-    //console.log(req.query.id);
     var query = "SELECT * FROM REGISTER, STUDENT WHERE TESTID = " + req.query.id + " AND REGISTER.USN = STUDENT.USN";
     var query2 = "SELECT * FROM TEST WHERE TEST.TESTID = " + req.query.id;
-    console.log(query2);
+    
     connection.query(query, function(err, result1) {
-        //console.log(result1);
+        
         connection.query(query2, function(err2, result2) {
-            console.log(result1);
+            
             res.render('header', {USN: req.session.username}, function(err, html) {
                 res.render('test', {Test: result2, Reg: result1}, function(err2, html2) {
                     res.render('template', {header: html, body: html2});
@@ -628,11 +639,11 @@ app.get('/test', function(req, res) {
 app.get('/offer', function(req, res) {
     var query = "SELECT * FROM REGISTER, STUDENT WHERE TESTID = " + req.query.id + " AND REGISTER.USN = STUDENT.USN";
     var query2 = "SELECT * FROM TEST WHERE TEST.TESTID = " + req.query.id;
-    console.log(query2);
+    
     connection.query(query, function(err, result1) {
-        //console.log(result1);
+        
         connection.query(query2, function(err2, result2) {
-            console.log(result1);
+            
             res.render('header', {USN: req.session.username}, function(err, html) {
                 res.render('offer', {Test: result2, Reg: result1}, function(err2, html2) {
                     res.render('template', {header: html, body: html2});

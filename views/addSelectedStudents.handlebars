@@ -43,12 +43,14 @@
             //contentType: "json",
             dataType: "json",
             data: {list: studentList},
-            success: function() {
-                console.log("AJAX done");
+            success: function() 
+            {
+                //console.log("AJAX done");
                 window.location = "/";
             },
-            error: function() {
-                console.log("AJAX error");
+            error: function() 
+            {
+                console.log("\n---------------------------\nAJAX Error: Unable to send Student List\n---------------------------\n");
             }
 
         });

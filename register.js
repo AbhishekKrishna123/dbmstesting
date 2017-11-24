@@ -43,6 +43,7 @@ module.exports =
             if(err)
             {
                 console.log("\n---------------------------\nBackend Error: Unable to insert into table Student\n---------------------------\n");
+                res.render('error');
             }
 
         });
@@ -55,6 +56,7 @@ module.exports =
             if(err) 
             {
                 console.log("\n---------------------------\nBackend Error: Unable to insert into table User\n---------------------------\n");
+                res.render('error');
             }
 
         });
