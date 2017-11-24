@@ -72,7 +72,7 @@ module.exports =
 
                                             connection.query(testq_old, function(err_old, result_old) {
 
-                                                response.render('dashboard_stu', {
+                                                response.render('dashboardStu', {
                                                     Details: res[0],
                                                     Department: dept,
                                                     RegTests: result_reg,
@@ -122,7 +122,7 @@ module.exports =
                         if(errid) throw errid;
                         else dept = resid[0].Name;
 
-                        response.render('dashboard_fac', {
+                        response.render('dashboardFac', {
                             ID: res[0].FacultyID,
                             //FirstName: res[0].FirstName,
                             //LastName: res[0].LastName,
@@ -174,7 +174,7 @@ module.exports =
 
                                 console.log(result2[0]);
 
-                                response.render('dashboard_spc', {
+                                response.render('dashboardSpc', {
                                     USN: result[0].USN,
                                     Department: dept,
                                     Username: req.session.username,
@@ -203,12 +203,12 @@ module.exports =
 
         else if(role == 4)
         {
-            response.render('dashboard_placementcell');
+            response.render('dashboardPlacementCell');
         }
 
         else if (role == 0) //admin
         {
-            response.render('dashboard_admin');
+            response.render('dashboardAdmin');
         }
 
     }

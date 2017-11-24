@@ -23,7 +23,7 @@ module.exports =
 
         if(new_password != cnew_password)
         {
-            res.sendFile('password_change_fail.html', { root: path.join(__dirname, 'templates')});
+            res.render('passwordChangeFail');
         }
 
         //console.log("OLD PW: " + old_password);
@@ -62,7 +62,7 @@ module.exports =
                 else
                 {
                     //console.log("WRONG DETAILS!\n\n");
-                    res.sendFile('password_change_fail.html', { root: path.join(__dirname, 'templates')});
+                    res.render('passwordChangeFail');
                 }
             }
         });

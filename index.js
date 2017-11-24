@@ -82,7 +82,7 @@ app.get('/', function(req, res) {
 
 app.post('/login', urlEncodedParser, function(request, response){
 
-    console.log(request.body.username + " : USN\n\n" + request.body.password + " : password\n\n");
+    console.log (request.body.username + " : USN\n\n" + request.body.password + " : password\n\n");
 
     var login = require('./login.js');
 
@@ -93,7 +93,9 @@ app.post('/login', urlEncodedParser, function(request, response){
 //--------------------------------------------------------------------------------------------
 
 app.get('/dashboard', function(req, res) {
+
     if (req.session.username) {
+
         if(req.session.username[0] == '1')
         {
             var q = "SELECT * FROM DEPARTMENT WHERE DEPARTMENTID IN (SELECT DEPARTMENT FROM STUDENT WHERE USN = '" + req.session.username + "');";
@@ -125,7 +127,7 @@ app.get('/dashboard', function(req, res) {
 
 app.get('/password_change', urlEncodedParser, function (req, res){
     if (req.session.username) {
-        res.render('password_change');
+        res.render('passwordChange');
     }
     else {
         res.redirect('/');
@@ -342,7 +344,7 @@ app.get('/add_test_result', function(req, res){
         }
         else
         {
-            res.render('add_test_result', {Tests: result});
+            res.render('addTestResult', {Tests: result});
         }
     });
 });
@@ -363,7 +365,7 @@ app.post('/add_test_result', urlEncodedParser, function(req, res){
         {
             console.log("STUDENTS\n\n" + result.length);
             res.render('header', {USN: req.session.username}, function(err, html) {
-                res.render('add_selected_students', {Students: result}, function(err2, html2) {
+                res.render('addSelectedStudents', {Students: result}, function(err2, html2) {
                     res.render('template', {header: html, body: html2});
                 });
             });
