@@ -51,7 +51,6 @@ module.exports =
             else console.log("SUCCESS" + result);
         });
 
-        res.sendFile('regsuccess.html', { root: path.join(__dirname, 'templates') });
-        //res.redirect('/#cta');
+        res.render('regsuccess');
     }
 }

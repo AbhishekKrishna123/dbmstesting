@@ -1,14 +1,21 @@
+
+///////////////////////////////////////////////////
+////////////////// Packages //////////////////////
+/////////////////////////////////////////////////
+
+
 var express = require("express");
 var app = express();
 
 var bodyParser = require("body-parser");
 var urlEncodedParser = bodyParser.urlencoded({extended: false});
-var path = require("path");
 
+var path = require("path");
 
 var xl = require("exceljs");
 
 var mysql = require("mysql");
+
 // connect strings for mysql
 var connection = mysql.createConnection({
 	host: "127.0.0.1",
@@ -54,19 +61,27 @@ var hbs = exphbs.create({ /* config */ });
 app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
 
+/*---------------------------------------------------------------------------------------------------------------- */
 
+
+///////////////////////////////////////////////////////
+/////////////////// COMMON URLS ///////////////////////
+//////////////////////////////////////////////////////
 
 app.get('/', function(req, res) {
+
     if (req.session.username) {
         res.redirect('/dashboard');
     }
 
-    res.sendFile('home.html', { root: path.join(__dirname, 'templates')});
+    res.render('home');
+
 });
 
+//--------------------------------------------------------------------------------------------
 
 app.post('/login', urlEncodedParser, function(request, response){
-    //res.sendFile('success.html', { root: path.join(__dirname, 'templates') });
+
     console.log(request.body.username + " : USN\n\n" + request.body.password + " : password\n\n");
 
     var login = require('./login.js');
@@ -75,28 +90,10 @@ app.post('/login', urlEncodedParser, function(request, response){
 
 });
 
-
-app.get('/register', function(req, res){
-    //res.sendFile('register.html', { root: path.join(__dirname, 'templates') });
-    connection.query("SELECT * FROM DEPARTMENT;", function(error, result){
-        if (error)
-        {
-            throw error;
-        }
-
-        else
-        {
-
-            res.render('register', {Departments: result});
-        }
-    });
-    //res.render('/register')
-});
+//--------------------------------------------------------------------------------------------
 
 app.get('/dashboard', function(req, res) {
     if (req.session.username) {
-        //res.render('dashboard', { name: req.session.FirstName, USN: req.session.USN });
-
         if(req.session.username[0] == '1')
         {
             var q = "SELECT * FROM DEPARTMENT WHERE DEPARTMENTID IN (SELECT DEPARTMENT FROM STUDENT WHERE USN = '" + req.session.username + "');";
@@ -118,23 +115,13 @@ app.get('/dashboard', function(req, res) {
             var dashboard = require("./dashboard.js");
             dashboard.Dashboard(connection, req, res, '');
         }
-
     }
     else {
-
         res.redirect('/');
     }
-
 });
 
-app.post('/register', urlEncodedParser, function(req, res){
-
-    var body = req.body;
-    var reg = require('./register.js');
-    reg.Reg(connection, body, res);
-
-});
-
+//--------------------------------------------------------------------------------------------
 
 app.get('/password_change', urlEncodedParser, function (req, res){
     if (req.session.username) {
@@ -145,6 +132,8 @@ app.get('/password_change', urlEncodedParser, function (req, res){
     }
 });
 
+//--------------------------------------------------------------------------------------------
+
 app.post('/password_change', urlEncodedParser, function (req, res){
 
     //var body = req.body;
@@ -153,6 +142,107 @@ app.post('/password_change', urlEncodedParser, function (req, res){
     password_change.PasswordChange(req, res, connection);
 
 });
+
+//--------------------------------------------------------------------------------------------
+
+app.get('/logout', function(req, res)
+{
+    if (req.session.username)
+    {
+        req.session.destroy();
+        res.redirect('/');
+    }
+    
+    else res.redirect('/');
+    
+});     
+
+/* --------------------------------------------------------------------------------------------------------------------- */
+
+///////////////////////////////////////////////////////
+/////////////////// STUDENT URLS ///////////////////////
+//////////////////////////////////////////////////////
+
+
+app.get('/register', function(req, res){
+    //res.sendFile('register.html', { root: path.join(__dirname, 'templates') });
+    connection.query("SELECT * FROM DEPARTMENT;", function(error, result){
+        if (error)
+        {
+            throw error;
+        }
+
+        else
+        {
+            res.render('register', {Departments: result});
+        }
+    });
+});
+
+//--------------------------------------------------------------------------------------------
+
+app.post('/register', urlEncodedParser, function(req, res){
+
+    var body = req.body;
+    var reg = require('./register.js');
+    reg.Reg(connection, body, res);
+
+});
+
+//--------------------------------------------------------------------------------------------
+
+app.post('/test_register', urlEncodedParser, function(req, res){
+    
+    console.log("ID" + req.body.ID);
+    var body = req.body;
+    
+    var insertVals =
+    {
+        USN: req.session.username,
+        TestID: body.ID
+    }
+    
+    connection.query("INSERT INTO REGISTER SET ?", insertVals, function(error, result){
+        if(error)
+        {
+            console.log("ERROR");
+            throw error;
+        }
+    
+        else
+        {
+            console.log("TESTREG SUCCESS");
+            res.send({status: 200});
+        }
+    });
+});
+
+//--------------------------------------------------------------------------------------------
+    
+app.post('/test_unregister', urlEncodedParser, function(req, res)
+{
+    var delete_query = "DELETE FROM REGISTER WHERE USN = '" + req.session.username + "' AND TESTID = '" + req.body.ID + "';";
+    connection.query(delete_query, function(error, result)
+    {
+        if(error)
+        {
+            throw error;
+        }
+        else
+        {
+            console.log("UNREG SUCCESS!");
+            res.send({status: 200});
+        }
+    });
+});
+
+/* --------------------------------------------------------------------------------------------------------------------- */
+
+///////////////////////////////////////////////////////
+///////////////// SPC AND FAC URLS ///////////////////
+/////////////// AND PLACEMENT DEPARTMENT /////////////
+//////////////////////////////////////////////////////
+
 
 app.get('/add_company_test', function(req, res){
 
@@ -195,6 +285,8 @@ app.get('/add_company_test', function(req, res){
     }
 });
 
+//--------------------------------------------------------------------------------------------
+
 app.post('/add_company_test', urlEncodedParser, function(req, res){
 
     var addCompanyTest = require('./addCompanyTest.js');
@@ -215,6 +307,8 @@ app.post('/add_company_test', urlEncodedParser, function(req, res){
     });
 });
 
+//--------------------------------------------------------------------------------------------
+
 app.get('/add_company', function(req, res){
 
     if(req.session.username && req.session.role != 1)
@@ -224,55 +318,134 @@ app.get('/add_company', function(req, res){
     else res.redirect('/');
 });
 
+//--------------------------------------------------------------------------------------------
+
 app.post('/add_company', urlEncodedParser, function(req, res){
     var addCompany = require('./addCompany.js');
     addCompany.addCompany(req, res, connection);
 });
 
+//--------------------------------------------------------------------------------------------
 
-app.post('/testregister', urlEncodedParser, function(req, res){
+app.get('/add_test_result', function(req, res){
 
-    console.log("ID" + req.body.ID);
+    var date= new Date();
+    var currentDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
+    
+    var query_test = "SELECT * FROM TEST WHERE TESTDATE < '" + currentDate + "';";
+    console.log(currentDate);
+    
+    connection.query(query_test, function(error, result){
+        if (error)
+        {
+            console.log("Error");
+        }
+        else
+        {
+            res.render('add_test_result', {Tests: result});
+        }
+    });
+});
+
+//--------------------------------------------------------------------------------------------
+    
+app.post('/add_test_result', urlEncodedParser, function(req, res){
+    
     var body = req.body;
+    var query_student = "SELECT * FROM STUDENT,REGISTER WHERE TESTID = '" + body.test + "' AND STUDENT.USN = REGISTER.USN;";
+    
+    connection.query(query_student, function(error, result){
+        if (error)
+        {
+            console.log("Error");
+        }
+        else
+        {
+            console.log("STUDENTS\n\n" + result.length);
+            res.render('header', {USN: req.session.username}, function(err, html) {
+                res.render('add_selected_students', {Students: result}, function(err2, html2) {
+                    res.render('template', {header: html, body: html2});
+                });
+            });
+        }
+    });
+});
 
-    var insertVals =
+//--------------------------------------------------------------------------------------------
+
+app.post('/add_selected_students', urlEncodedParser, function(req, res){
+    
+    console.log(req.body);
+    
+    var usnList = req.body.list.split(" ");
+    var query = "";
+    
+    for (i = 0; i <usnList.length-1; i++) {
+        query += "UPDATE REGISTER SET `SELECTED` = 'YES' WHERE USN = '" + usnList[i] + "' AND TESTID = 37; ";
+    }
+    
+    console.log(query);
+    
+    connection.query(query, function(error, result){
+        if (error)
+        {
+            console.log("Error");
+            //res.sendStatus(500);
+        }
+        else
+        {
+            console.log("success " + result.length);
+            //res.sendStatus(200);
+            res.send({status: 200});
+        }
+    });   
+});
+
+//--------------------------------------------------------------------------------------------
+    
+app.get("/report", function(req, res) {
+    
+    if (req.session.role != 1)
     {
-        USN: req.session.username,
-        TestID: body.ID
+        var query = "SELECT * FROM REGISTER";
+        connection.query(query, function(err, result) {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                var workbook = new xl.Workbook();
+                var worksheet = workbook.addWorksheet('Register Report');
+                worksheet.columns = [
+                    { header: 'USN', key: 'USN', width: 20 },
+                    { header: 'TESTID', key: 'TESTID', width: 20 },
+                    { header: 'SELECTED', key: 'SELECTED', width: 20 }
+                ];
+    
+                for (var i=0; i<result.length; i++) {
+                    worksheet.addRow([result[i].USN, result[i].TestID, result[i].Selected]);
+                }
+    
+                workbook.xlsx.writeFile("C:/Users/Abhishek/Documents/5th Semester/DBMS/Report.xlsx")
+                .then(function() {
+                    "File saved!";
+                });
+            }
+        });
+
+        res.redirect("/");
+    }
+    else{
+        res.redirect('/');
     }
 
-    connection.query("INSERT INTO REGISTER SET ?", insertVals, function(error, result){
-        if(error)
-        {
-            console.log("ERROR");
-            throw error;
-        }
-
-        else
-        {
-            console.log("TESTREG SUCCESS");
-            res.send({status: 200});
-            //res.redirect('/dashboard');
-        }
-    });
 });
 
-app.post('/testunregister', urlEncodedParser, function(req, res)
-{
-    var delete_query = "DELETE FROM REGISTER WHERE USN = '" + req.session.username + "' AND TESTID = '" + req.body.ID + "';";
-    connection.query(delete_query, function(error, result)
-    {
-        if(error)
-        {
-            throw error;
-        }
-        else
-        {
-            console.log("UNREG SUCCESS!");
-            res.send({status: 200});
-        }
-    });
-});
+/* --------------------------------------------------------------------------------------------------------------------- */
+
+///////////////////////////////////////////////////////
+//////////////////// ADMIN URLS //////////////////////
+//////////////////////////////////////////////////////
+
 
 app.get('/add_remove_users', function(req, res)
 {
@@ -292,8 +465,9 @@ app.get('/add_remove_users', function(req, res)
     }
 
     else res.redirect('/');
-
 });
+
+//--------------------------------------------------------------------------------------------
 
 app.post('/remove_user', urlEncodedParser, function(req, res){
 
@@ -312,6 +486,8 @@ app.post('/remove_user', urlEncodedParser, function(req, res){
         }
     });
 });
+
+//--------------------------------------------------------------------------------------------
 
 
 app.get('/add_new_user', function(req, res)
@@ -333,6 +509,8 @@ app.get('/add_new_user', function(req, res)
     }
     else res.redirect('/');
 });
+
+//--------------------------------------------------------------------------------------------
 
 app.post('/add_new_user', urlEncodedParser, function(req, res)
 {
@@ -414,6 +592,8 @@ app.post('/add_new_user', urlEncodedParser, function(req, res)
 
 });
 
+//--------------------------------------------------------------------------------------------
+
 
 app.get('/test', function(req, res) {
 
@@ -432,8 +612,7 @@ app.get('/test', function(req, res) {
             });
         });
     });
-
-})
+});
 
 app.get('/offer', function(req, res) {
     var query = "SELECT * FROM REGISTER, STUDENT WHERE TESTID = " + req.query.id + " AND REGISTER.USN = STUDENT.USN";
@@ -452,127 +631,5 @@ app.get('/offer', function(req, res) {
     });
 })
 
-app.get('/add_test_result', function(req, res){
-
-    var date= new Date();
-    var currentDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
-
-    var query_test = "SELECT * FROM TEST WHERE TESTDATE < '" + currentDate + "';";
-    console.log(currentDate);
-
-    connection.query(query_test, function(error, result){
-        if (error)
-        {
-            console.log("Error");
-        }
-        else
-        {
-            res.render('add_test_result', {Tests: result});
-        }
-    });
-});
-
-app.post('/add_test_result', urlEncodedParser, function(req, res){
-
-    var body = req.body;
-    var query_student = "SELECT * FROM STUDENT,REGISTER WHERE TESTID = '" + body.test + "' AND STUDENT.USN = REGISTER.USN;";
-
-    connection.query(query_student, function(error, result){
-        if (error)
-        {
-            console.log("Error");
-        }
-        else
-        {
-            console.log("STUDENTS\n\n" + result.length);
-            res.render('header', {USN: req.session.username}, function(err, html) {
-                res.render('add_selected_students', {Students: result}, function(err2, html2) {
-                    res.render('template', {header: html, body: html2});
-                });
-            });
-        }
-    });
-});
-
-app.post('/add_selected_students', urlEncodedParser, function(req, res){
-
-    console.log(req.body);
-
-    var usnList = req.body.list.split(" ");
-
-    var query = "";
-
-    for (i = 0; i <usnList.length-1; i++) {
-        query += "UPDATE REGISTER SET `SELECTED` = 'YES' WHERE USN = '" + usnList[i] + "' AND TESTID = 37; ";
-    }
-
-    console.log(query);
-
-    connection.query(query, function(error, result){
-        if (error)
-        {
-            console.log("Error");
-            //res.sendStatus(500);
-        }
-        else
-        {
-            console.log("success " + result.length);
-            //res.sendStatus(200);
-            res.send({status: 200});
-        }
-    });
-
-    //res.sendStatus(200);
-});
-
-app.get("/report", function(req, res) {
-
-    if (req.session.role != 1)
-    {
-        var query = "SELECT * FROM REGISTER";
-        connection.query(query, function(err, result) {
-            if (err) {
-                console.log(err);
-            }
-            else {
-                var workbook = new xl.Workbook();
-                var worksheet = workbook.addWorksheet('Register Report');
-
-                worksheet.columns = [
-                    { header: 'USN', key: 'USN', width: 20 },
-                    { header: 'TESTID', key: 'TESTID', width: 20 },
-                    { header: 'SELECTED', key: 'SELECTED', width: 20 }
-                ];
-
-                for (var i=0; i<result.length; i++) {
-                    worksheet.addRow([result[i].USN, result[i].TestID, result[i].Selected]);
-                }
-
-                workbook.xlsx.writeFile("C:/Users/Abhishek/Documents/5th Semester/DBMS/Report.xlsx")
-                .then(function() {
-                    "File saved!";
-                });
-            }
-        });
-        res.redirect("/");
-    }
-    else{
-        res.redirect('/');
-    }
-
-});
-
-app.get('/logout', function(req, res){
-
-    if (req.session.username)
-    {
-        req.session.destroy();
-        res.redirect('/');
-    }
-    else res.redirect('/');
-});
-
 app.listen(3000);
-
-
 

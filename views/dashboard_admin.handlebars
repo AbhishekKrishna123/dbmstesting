@@ -69,7 +69,7 @@
                 console.log("Reg Function called");
                 var testID = obj.name;
                 $.ajax({
-                    url: '/testregister',
+                    url: '/test_register',
                     type: "POST",
                     datatype: "json",
                     data: {ID: testID},
@@ -96,7 +96,7 @@
                 console.log("Unreg function called");
                 var testID = obj.name;
                 $.ajax({
-                    url: '/testunregister',
+                    url: '/test_unregister',
                     type: "POST",
                     datatype: "json",
                     data: {ID: testID},
