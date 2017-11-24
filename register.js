@@ -37,20 +37,28 @@ module.exports =
             Password: body.pwd,
 
         };
-        // insertion into MySQL
+    
         connection.query("INSERT INTO STUDENT SET ?", insertVals, function(err, result) {
-            if(err) throw err;
-            else console.log("SUCCESS" + result);
+            
+            if(err)
+            {
+                console.log("\n---------------------------\nBackend Error: Unable to insert into table Student\n---------------------------\n");
+            }
+
         });
 
 
         var insertUsers = {username : body.usn, password : body.pwd, role : 1};
 
         connection.query("INSERT INTO USER SET ?", insertUsers, function(err, result) {
-            if(err) throw err;
-            else console.log("SUCCESS" + result);
+            
+            if(err) 
+            {
+                console.log("\n---------------------------\nBackend Error: Unable to insert into table User\n---------------------------\n");
+            }
+
         });
 
-        res.render('regsuccess');
+        res.render('regSuccess');
     }
 }

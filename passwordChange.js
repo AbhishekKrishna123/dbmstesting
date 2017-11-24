@@ -13,10 +13,7 @@ module.exports =
     PasswordChange : function (req, res, connection)
     {
         var body = req.body;
-        var name = req.session.username;
-
-        //console.log("username" + name);
-
+        var username = req.session.username;
         var old_password = body.old_password;
         var new_password = body.new_password;
         var cnew_password = body.cnew_password;
@@ -26,42 +23,37 @@ module.exports =
             res.render('passwordChangeFail');
         }
 
-        //console.log("OLD PW: " + old_password);
-        //console.log("NEW PW: ", + new_password);
+        var user_details_query = "SELECT * FROM USER WHERE USERNAME = '" + username + "';"
 
-        var query1 = "SELECT * FROM USER WHERE USERNAME = '" + name + "';"
-
-
-        connection.query(query1, function(err, result){
+        connection.query(user_details_query, function(err, result){
             
             if(err) 
             {
-                console.log("ERROR!" + err);
+                console.log("\n---------------------------\n Backend Error: Unable to retrieve details for current user\n---------------------------\n");
             }
 
             else
             {
-                //console.log("FIRST RESULT" + result + "\n\n");
-
                 if(result[0].password == body.old_password)
                 {
+                    var update_password_query = "UPDATE USER SET PASSWORD = '" + new_password + "' WHERE USERNAME = '" + username + "';"
 
-                    var query2 = "UPDATE USER SET PASSWORD = '" + new_password + "' WHERE USERNAME = '" + name + "';"
-
-                    connection.query(query2, function(error, result)
+                    connection.query(update_password_query, function(error, result)
                     {
-                        if(error) throw error;
+                        if(error)
+                        {
+                            console.log("\n---------------------------\n Backend Error: Unable to update password\n---------------------------\n");
+                            
+                        }
                         else 
                         {
-                            //console.log("UPDATED!" + result);
-                            res.redirect('/dashboard');
+                            res.render('passwordChangeSuccess');
                         }
                     });
                 }
 
                 else
                 {
-                    //console.log("WRONG DETAILS!\n\n");
                     res.render('passwordChangeFail');
                 }
             }

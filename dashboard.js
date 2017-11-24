@@ -13,41 +13,52 @@ module.exports =
     Dashboard : function(connection, req, response, dept)
     {
         var role = req.session.role;
-        //console.log("USER ROLE: ", role);
 
-        if (role == 1)
+        if (role == 0) //admin
         {
-            connection.query("SELECT * FROM STUDENT WHERE USN = '" + req.session.username + "'", function(err, res, fields){
+            response.render('dashboardAdmin');
+        }
 
+        else if (role == 1)
+        {
+            var student_details_query = "SELECT * FROM STUDENT WHERE USN = '" + req.session.username + "'" ; 
+            
+            connection.query(student_details_query, function(err, res, fields){
 
                 var date= new Date();
                 var currentDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
-                console.log(currentDate);
 
-                //console.log(res);
+                if(err)
+                {
+                    throw err;
+                }
 
-                if(res.length == 0) {
-                    console.log("Error 1");
-                    console.log(res);
-                    response.sendFile("unauthorised.html", { root: path.join(__dirname, 'templates') });
-                    //return 0;
-                } else {
+                if(res.length == 0) 
+                {
+                    console.log("\n---------------------------\nDashboard Error: USN doesn't match Username\n---------------------------\n");
+                }
+                
+                else 
+                {
+                    var testq_reg = "SELECT * FROM TEST, COMPANY WHERE CUTOFFGPA <=  " + res[0].CGPA + 
+                    " AND TEST.TESTID IN (SELECT TESTID FROM ELIGIBLEDEPARTMENTS WHERE DEPARTMENTID = '" + dept + 
+                    "') AND TEST.TESTID IN (SELECT TESTID FROM REGISTER WHERE REGISTER.USN = '" + 
+                    req.session.username + "') AND TEST.COMPANYID = COMPANY.COMPANYID AND TESTDATE >= '" + currentDate + "'";
 
-
-                    console.log("GPA" + res[0].CGPA);
-                    var testq_reg = "SELECT * FROM TEST, COMPANY WHERE CUTOFFGPA <=  " + res[0].CGPA + " AND TEST.TESTID IN (SELECT TESTID FROM ELIGIBLEDEPARTMENTS WHERE DEPARTMENTID = '" + dept + "') AND TEST.TESTID IN (SELECT TESTID FROM REGISTER WHERE REGISTER.USN = '" + req.session.username + "') AND TEST.CompanyID = COMPANY.CompanyID AND TESTDATE >= '" + currentDate + "'";
-                    console.log("REG" + testq_reg + "\n\n");
                     connection.query(testq_reg, function(error_reg, result_reg){
+                        
                         if (error_reg)
                         {
                             throw error_reg;
                         }
+                        
                         else
                         {
-                            //console.log("DATE" + datetime);
-                            //var testq_notreg = "SELECT * FROM TEST WHERE CUTOFFGPA <=  '" + res[0].CGPA + "' AND TEST.TESTID NOT IN (SELECT TESTID FROM REGISTER WHERE REGISTER.USN = '" + req.session.username + "');";
-                            var testq_notreg = "SELECT * FROM TEST, COMPANY WHERE CUTOFFGPA <=  " + res[0].CGPA + " AND TEST.TESTID IN (SELECT TESTID FROM ELIGIBLEDEPARTMENTS WHERE DEPARTMENTID = '" + dept + "') AND TEST.TESTID NOT IN (SELECT TESTID FROM REGISTER WHERE REGISTER.USN = '" + req.session.username + "') AND TEST.CompanyID = COMPANY.CompanyID AND TESTDATE >= '" + currentDate + "'";
-                            console.log("Q: " + testq_notreg);
+                            var testq_notreg = "SELECT * FROM TEST, COMPANY WHERE CUTOFFGPA <=  " + res[0].CGPA + 
+                            " AND TEST.TESTID IN (SELECT TESTID FROM ELIGIBLEDEPARTMENTS WHERE DEPARTMENTID = '" + dept + 
+                            "') AND TEST.TESTID NOT IN (SELECT TESTID FROM REGISTER WHERE REGISTER.USN = '" + 
+                            req.session.username + "') AND TEST.COMPANYID = COMPANY.COMPANYID AND TESTDATE >= '" + currentDate + "'";
+
                             connection.query(testq_notreg, function(error_notreg, result_notreg){
                                 if (error_notreg)
                                 {
@@ -56,8 +67,10 @@ module.exports =
 
                                 else
                                 {
-                                    var testq_notelig = "SELECT * FROM TEST, COMPANY WHERE CUTOFFGPA >  " + res[0].CGPA + " AND TEST.TESTID IN (SELECT TESTID FROM ELIGIBLEDEPARTMENTS WHERE DEPARTMENTID = '" + dept + "') AND TEST.CompanyID = COMPANY.CompanyID AND TESTDATE >= '" + currentDate + "'";
-                                    console.log("NE: " + testq_notelig);
+                                    var testq_notelig = "SELECT * FROM TEST, COMPANY WHERE CUTOFFGPA >  " + res[0].CGPA + 
+                                    " AND TEST.TESTID IN (SELECT TESTID FROM ELIGIBLEDEPARTMENTS WHERE DEPARTMENTID = '" + dept + 
+                                    "') AND TEST.CompanyID = COMPANY.CompanyID AND TESTDATE >= '" + currentDate + "'";
+
                                     connection.query(testq_notelig, function(error_notelig, result_notelig){
                                         if(error_notelig)
                                         {
@@ -67,8 +80,8 @@ module.exports =
                                         else
                                         {
 
-                                            var testq_old = "SELECT * FROM TEST LEFT JOIN REGISTER ON TEST.TESTID = REGISTER.TESTID AND REGISTER.USN = '" + req.session.username + "'" +  " WHERE TESTDATE < '" + currentDate + "';";
-                                            console.log(testq_old);
+                                            var testq_old = "SELECT * FROM TEST LEFT JOIN REGISTER ON TEST.TESTID = REGISTER.TESTID AND REGISTER.USN = '" + 
+                                            req.session.username + "'" +  " WHERE TESTDATE < '" + currentDate + "';";
 
                                             connection.query(testq_old, function(err_old, result_old) {
 
@@ -89,10 +102,7 @@ module.exports =
                                                         });
                                                     });
                                                 });
-
                                             })
-
-
                                         }
                                     });
                                 }
@@ -105,27 +115,35 @@ module.exports =
 
         else if (role == 2)//faculty login
         {
-            connection.query("SELECT * FROM FACULTY WHERE FACULTYID = '" + req.session.username + "'", function(err, res, fields){
+            var faculty_details_query = "SELECT * FROM FACULTY WHERE FACULTYID = '" + req.session.username + "'" ;
 
-                console.log(res);
+            connection.query(faculty_details_query, function(err, res, fields){
 
-                if(res.length == 0) {
-                    console.log("Error 1");
-                    console.log(res);
-                    response.sendFile("unauthorised.html", { root: path.join(__dirname, 'templates') });
-                    //return 0;
-                } else {
-
+                if(res.length == 0) 
+                {
+                    console.log("\n---------------------------\nDashboard Error: Faculty ID doesn't match Username\n---------------------------\n");
+                } 
+                
+                else 
+                {
                     var dept;
-                    connection.query("SELECT * FROM DEPARTMENT WHERE DEPARTMENTID = '" + res[0].DepartmentID + "';", function(errid, resid){
 
-                        if(errid) throw errid;
-                        else dept = resid[0].Name;
+                    var dept_details_query = "SELECT * FROM DEPARTMENT WHERE DEPARTMENTID = '" + res[0].DepartmentID + "';" ; 
+                    
+                    connection.query(dept_details_query, function(errid, resid){
+
+                        if(errid)
+                        {
+                            throw errid;
+                        }
+
+                        else 
+                        {
+                            dept = resid[0].Name;
+                        }
 
                         response.render('dashboardFac', {
                             ID: res[0].FacultyID,
-                            //FirstName: res[0].FirstName,
-                            //LastName: res[0].LastName,
                             Name: res[0].Name,
                             EmailID: res[0].EmailID,
                             MobileNumber: res[0].MobileNumber,
@@ -147,32 +165,34 @@ module.exports =
 
         else if (role == 3) // spc login
         {
-            //response.render('dashboard_placementcell');
-            connection.query("SELECT * FROM SPC WHERE USERNAME = '" + req.session.username + "';", function(error, result)
-            {
+            var spc_details_query = "SELECT * FROM SPC WHERE USERNAME = '" + req.session.username + "';" ;
+
+            connection.query(spc_details_query, function(error, result){
+
                 if(error)
                 {
                     throw error;
                 }
 
-                else {
-                    console.log("FOUND SPC, WITH " + result[0]);
+                else 
+                {
                     var dept;
-                    connection.query("SELECT * FROM DEPARTMENT WHERE DEPARTMENTID = '" + result[0].DepartmentID + "';", function(errid, resid){
+
+                    var dept_details_query = "SELECT * FROM DEPARTMENT WHERE DEPARTMENTID = '" + result[0].DepartmentID + "';" ; 
+                    connection.query(dept_details_query, function(errid, resid){
 
                         if(errid)
                         {
                             throw errid;
                         }
+
                         else
                         {
                             dept = resid[0].Name;
 
-                            var testQuery = "SELECT * FROM TEST, COMPANY WHERE TEST.TESTID IN (SELECT TESTID FROM ELIGIBLEDEPARTMENTS WHERE DEPARTMENTID = " + result[0].DepartmentID + ") AND TEST.CompanyID = COMPANY.CompanyID ;";
-                            console.log("TQ: " + testQuery);
-                            connection.query(testQuery, function(errid, result2) {
+                            var test_query = "SELECT * FROM TEST, COMPANY WHERE TEST.TESTID IN (SELECT TESTID FROM ELIGIBLEDEPARTMENTS WHERE DEPARTMENTID = " + result[0].DepartmentID + ") AND TEST.CompanyID = COMPANY.CompanyID ;";
 
-                                console.log(result2[0]);
+                            connection.query(test_query, function(errid, result2) {
 
                                 response.render('dashboardSpc', {
                                     USN: result[0].USN,
@@ -190,14 +210,10 @@ module.exports =
                                         });
                                     });
                                 });
-
                             })
-
-
                         }
                     });
                 }
-
             });
         }
 
@@ -205,11 +221,5 @@ module.exports =
         {
             response.render('dashboardPlacementCell');
         }
-
-        else if (role == 0) //admin
-        {
-            response.render('dashboardAdmin');
-        }
-
     }
 }

@@ -70,7 +70,8 @@ app.set('view engine', 'handlebars');
 
 app.get('/', function(req, res) {
 
-    if (req.session.username) {
+    if (req.session.username)
+    {
         res.redirect('/dashboard');
     }
 
@@ -82,10 +83,7 @@ app.get('/', function(req, res) {
 
 app.post('/login', urlEncodedParser, function(request, response){
 
-    console.log (request.body.username + " : USN\n\n" + request.body.password + " : password\n\n");
-
     var login = require('./login.js');
-
     login.Login(connection, request, response);
 
 });
@@ -94,12 +92,13 @@ app.post('/login', urlEncodedParser, function(request, response){
 
 app.get('/dashboard', function(req, res) {
 
-    if (req.session.username) {
+    if (req.session.username) 
+    {
 
         if(req.session.username[0] == '1')
         {
-            var q = "SELECT * FROM DEPARTMENT WHERE DEPARTMENTID IN (SELECT DEPARTMENT FROM STUDENT WHERE USN = '" + req.session.username + "');";
-            connection.query(q, function(error, result){
+            var dept_query = "SELECT * FROM DEPARTMENT WHERE DEPARTMENTID IN (SELECT DEPARTMENT FROM STUDENT WHERE USN = '" + req.session.username + "');";
+            connection.query(dept_query, function(error, result){
                 if(error)
                 {
                     throw error;
@@ -112,13 +111,16 @@ app.get('/dashboard', function(req, res) {
                 }
             });
         }
+
         else
         {
             var dashboard = require("./dashboard.js");
             dashboard.Dashboard(connection, req, res, '');
         }
     }
-    else {
+
+    else 
+    {
         res.redirect('/');
     }
 });
@@ -126,6 +128,7 @@ app.get('/dashboard', function(req, res) {
 //--------------------------------------------------------------------------------------------
 
 app.get('/password_change', urlEncodedParser, function (req, res){
+
     if (req.session.username) {
         res.render('passwordChange');
     }
@@ -138,10 +141,8 @@ app.get('/password_change', urlEncodedParser, function (req, res){
 
 app.post('/password_change', urlEncodedParser, function (req, res){
 
-    //var body = req.body;
-    //console.log("OITSIDE" + req.session.username);
-    var password_change = require ("./password_change.js");
-    password_change.PasswordChange(req, res, connection);
+    var passwordChange = require ("./passwordChange.js");
+    passwordChange.PasswordChange(req, res, connection);
 
 });
 
@@ -167,7 +168,7 @@ app.get('/logout', function(req, res)
 
 
 app.get('/register', function(req, res){
-    //res.sendFile('register.html', { root: path.join(__dirname, 'templates') });
+    
     connection.query("SELECT * FROM DEPARTMENT;", function(error, result){
         if (error)
         {
@@ -331,22 +332,30 @@ app.post('/add_company', urlEncodedParser, function(req, res){
 
 app.get('/add_test_result', function(req, res){
 
-    var date= new Date();
-    var currentDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
-    
-    var query_test = "SELECT * FROM TEST WHERE TESTDATE < '" + currentDate + "';";
-    console.log(currentDate);
-    
-    connection.query(query_test, function(error, result){
-        if (error)
-        {
-            console.log("Error");
-        }
-        else
-        {
-            res.render('addTestResult', {Tests: result});
-        }
-    });
+    if(req.session.username && req.session.role != 1)
+    {
+        var date= new Date();
+        var currentDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
+        
+        var query_test = "SELECT * FROM TEST WHERE TESTDATE < '" + currentDate + "';";
+        console.log(currentDate);
+        
+        connection.query(query_test, function(error, result){
+            if (error)
+            {
+                console.log("Error");
+            }
+            else
+            {
+                res.render('addTestResult', {Tests: result});
+            }
+        });
+    }
+
+    else
+    {
+        res.redirect('/');
+    }
 });
 
 //--------------------------------------------------------------------------------------------
@@ -407,7 +416,7 @@ app.post('/add_selected_students', urlEncodedParser, function(req, res){
     
 app.get("/report", function(req, res) {
     
-    if (req.session.role != 1)
+    if(req.session.username && req.session.role != 1)
     {
         var query = "SELECT * FROM REGISTER";
         connection.query(query, function(err, result) {

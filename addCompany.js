@@ -21,11 +21,14 @@ module.exports =
         }
 
         connection.query("INSERT INTO COMPANY SET ?", insertVals, function(err, result) {
-            if(err) throw err;
+            
+            if(err)
+            {
+                console.log("\n---------------------------\nBackend Error: Unable to insert into table Company\n---------------------------\n")
+            }
             else
             {
-                console.log("SUCCESS" + result);
-                res.redirect('/dashboard');
+                res.render('companyAddSuccess', {Name: body.companyname, Details: body.companydetails});
             }
         });
     }
