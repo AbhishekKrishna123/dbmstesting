@@ -187,14 +187,14 @@ module.exports =
 
         else if (role == 2)//faculty login
         {
-            var faculty_details_query = "SELECT * FROM FACULTY WHERE FACULTYID = '" + req.session.username + "'" ;
+            var faculty_details_query = "SELECT * FROM FACULTY WHERE USERNAME = '" + req.session.username + "'" ;
 
             connection.query(faculty_details_query, function(err, res, fields){
 
                 if(res.length == 0) 
                 {
-                    console.log("\n---------------------------\nDashboard Error: Faculty ID doesn't match Username\n---------------------------\n");
-                    response.redirect('/error');
+                    console.log("\n---------------------------\nDashboard Error: Couldn't retrieve faculty details\n---------------------------\n");
+                    response.redirect('/logout');
                 } 
                 
                 else 
@@ -213,24 +213,36 @@ module.exports =
                         else 
                         {
                             dept = resid[0].Name;
-                        }
+                            var test_query = "SELECT * FROM TEST, COMPANY WHERE TEST.TESTID IN (SELECT TESTID FROM ELIGIBLEDEPARTMENTS WHERE DEPARTMENTID = " + res[0].DepartmentID + ") AND TEST.CompanyID = COMPANY.CompanyID ;";
 
-                        response.render('dashboardFac', {
-                            ID: res[0].FacultyID,
-                            Name: res[0].Name,
-                            EmailID: res[0].EmailID,
-                            MobileNumber: res[0].MobileNumber,
-                            Department: dept
-                        }, function(err1, html1){
-                            response.render('header', {
-                                username: req.session.username,
-                            }, function(err2, html2) {
-                                response.render('template', {
-                                    header: html2,
-                                    body: html1
-                                });
+                            connection.query(test_query, function(err3, res3){
+
+                                if(err3)
+                                {
+                                    console.log(err3);
+                                }
+                                else
+                                {
+                                    response.render('dashboardFac', {
+                                        ID: res[0].FacultyID,
+                                        Name: res[0].Name,
+                                        EmailID: res[0].EmailID,
+                                        MobileNumber: res[0].MobileNumber,
+                                        Department: dept,
+                                        Tests: res3
+                                    }, function(err1, html1){
+                                        response.render('header', {
+                                            username: req.session.username,
+                                        }, function(err2, html2) {
+                                            response.render('template', {
+                                                header: html2,
+                                                body: html1
+                                            });
+                                        });
+                                    });
+                                }
                             });
-                        });
+                        }
                     });
                 }
             });

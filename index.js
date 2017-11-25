@@ -718,6 +718,7 @@ app.post('/add_new_user', urlEncodedParser, function(req, res)
                     FacultyID: body.id,
                     DepartmentID: body.department,
                     Name: body.name,
+                    Username: body.username,
                     EmailID: body.email,
                     MobileNumber: body.mobile
                 }
@@ -774,9 +775,26 @@ app.get('/test', function(req, res) {
     if(req.session.username && req.session.role != 1)
     {
 
-        var query = "SELECT * FROM REGISTER, STUDENT WHERE TESTID = " + req.query.id + " AND REGISTER.USN = STUDENT.USN AND STUDENT.DEPARTMENT IN (SELECT DEPARTMENTID FROM SPC WHERE USERNAME = '" + req.session.username + "');";
+        if(req.session.role == 3) //spc
+        {
+            var query = "SELECT * FROM REGISTER, STUDENT WHERE TESTID = " + req.query.id + " AND REGISTER.USN = STUDENT.USN AND STUDENT.DEPARTMENT IN (SELECT DEPARTMENTID FROM SPC WHERE USERNAME = '" + req.session.username + "');";
+            var query3 = "SELECT * FROM REGISTER, STUDENT WHERE TESTID = " + req.query.id + " AND REGISTER.USN = STUDENT.USN AND REGISTER.SELECTED = 'YES' AND STUDENT.DEPARTMENT IN (SELECT DEPARTMENTID FROM SPC WHERE USERNAME = '" + req.session.username + "');";
+        }
+        else if (req.session.role == 2) //faculty
+        {
+            var query = "SELECT * FROM REGISTER, STUDENT WHERE TESTID = " + req.query.id + " AND REGISTER.USN = STUDENT.USN AND STUDENT.DEPARTMENT IN (SELECT DEPARTMENTID FROM FACULTY WHERE USERNAME = '" + req.session.username + "');";
+            var query3 = "SELECT * FROM REGISTER, STUDENT WHERE TESTID = " + req.query.id + " AND REGISTER.USN = STUDENT.USN AND REGISTER.SELECTED = 'YES' AND STUDENT.DEPARTMENT IN (SELECT DEPARTMENTID FROM FACULTY WHERE USERNAME = '" + req.session.username + "');";
+        }
+        else
+        {
+            var query = "SELECT * FROM REGISTER, STUDENT WHERE TESTID = " + req.query.id + " AND REGISTER.USN = STUDENT.USN;";
+            var query3 = "SELECT * FROM REGISTER, STUDENT WHERE TESTID = " + req.query.id + " AND REGISTER.USN = STUDENT.USN AND REGISTER.SELECTED = 'YES';";
+        }
+
+        
         var query2 = "SELECT * FROM TEST, COMPANY WHERE TEST.TESTID = " + req.query.id + " AND TEST.COMPANYID = COMPANY.COMPANYID;";
-        var query3 = "SELECT * FROM REGISTER, STUDENT WHERE TESTID = " + req.query.id + " AND REGISTER.USN = STUDENT.USN AND REGISTER.SELECTED = 'YES' AND STUDENT.DEPARTMENT IN (SELECT DEPARTMENTID FROM SPC WHERE USERNAME = '" + req.session.username + "');";
+        
+        
         
         connection.query(query, function(err, result1) {
             
