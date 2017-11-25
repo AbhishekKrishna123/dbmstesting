@@ -1,72 +1,129 @@
-<section id="main" class="container">
-    <header>
-        <h2> Select Students </h2>
-    </header>
+<!doctype html>
+<html class="no-js" lang="en">
 
-    <div>
-        {{#each Students}}
-        <p>
-            <input type="checkbox" id="{{this.USN}}" />
-            <label for="{{this.USN}}">{{this.USN}}: {{this.FirstName}} {{this.LastName}}</label>
-        </p>
-        {{/each}}
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <div class="row uniform">
-            <button class="waves-effect waves-light btn teal" onclick="sendStudentList();" id="submit">Add Students</button>
+    <link rel="stylesheet" href="./materialize/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> {{!--
+    <style>
+        body {
+            background-color: #000;
+            color: #eee;
+        }
+    </style> --}}
+</head>
+
+<body>
+    <nav class="teal">
+        <div class="nav-wrapper">
+            <a href="/dashboard" class="brand-logo center">Career Portal</a>
+            <a href="#" data-activates="mobile-demo" class="button-collapse">
+                <i class="material-icons">menu</i>
+            </a>
+            <ul id="nav-mobile" class="right hide-on-med-and-down">
+                <li>
+                    <a></a>Logged in as {{username}}</a>
+                </li>
+                <li>
+                    <a href="/logout">Logout</a>
+                </li>
+            </ul>
+            <ul class="side-nav" id="mobile-demo">
+                <li>
+                    <a href="/dashboard" class="active">Dashboard</a>
+                </li>
+                <li>
+                    <a href="/logout">Logout</a>
+                </li>
+            </ul>
+            <ul id="nav-mobile" class="left hide-on-med-and-down">
+                <li>
+                    <a href="/password_change"> Change Password </a>
+                </li>
+            </ul>
         </div>
-    </div>
+    </nav>
 
-    <div class="row">
-        <div class="col s3 offset-s2">
-            <a class="waves-effect waves-light btn teal" href="/dashboard"> Dashboard </a>
+
+    <section id="main" class="container">
+        <header>
+            <h2> Select Students </h2>
+        </header>
+
+        <div>
+            {{#each Students}}
+            <p>
+                <input type="checkbox" id="{{this.USN}}" name = "{{this.TestID}}" />
+                <label for="{{this.USN}}">{{this.USN}}: {{this.FirstName}} {{this.LastName}}</label>
+            </p>
+            {{/each}}
+
+            <div class="row uniform">
+                <button class="waves-effect waves-light btn teal" onclick="sendStudentList();" id="submit">Add Students</button>
+            </div>
         </div>
-        {{!-- <div class="col s3 offset-s2">
-            <a class="waves-effect waves-light btn teal" href="/logout"> Logout </a>
-        </div> --}}
-    </div>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <div class="row">
+            <div class="col s3 offset-s5">
+                <a class="waves-effect waves-light btn teal" href="/dashboard"> Dashboard </a>
+            </div>
 
-</section>
+        </div>
+
+    </section>
 
 
 
 
-<!-- Scripts -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="./materialize/js/materialize.min.js"></script>
+    <!-- Scripts -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="./materialize/js/materialize.min.js"></script>
 
-<script>
-    function sendStudentList() {
-        var studentList = "";
-        var arr = [];
-        $('input[type="checkbox"]').filter(':checked').each(
-            function () {
-                studentList += this.id + " ";
-            }
-        );
+    <script>
+        function sendStudentList() {
+            var studentList = "";
+            var arr = [];
+            var testid;
+            $('input[type="checkbox"]').filter(':checked').each(
+                function () {
+                    studentList += this.id + " ";
+                    testid = this.name;
+                }
+            );
 
-        //arr.push(studentList);
+            //arr.push(studentList);
 
-        $.ajax({
-            type: "POST",
-            url: "/add_selected_students",
-            //contentType: "json",
-            dataType: "json",
-            data: {
-                list: studentList
-            },
-            success: function () {
-                //console.log("AJAX done");
-                window.location = "/";
-            },
-            error: function () {
-                console.log(
-                    "\n---------------------------\nAJAX Error: Unable to send Student List\n---------------------------\n"
-                );
-            }
+            console.log("TESTID = " + testid);
+            $.ajax({
+                type: "POST",
+                url: "/add_selected_students",
+                //contentType: "json",
+                dataType: "json",
+                data: {
+                    list: studentList,
+                    testid: testid
+                },
+                success: function () {
+                    //console.log("AJAX done");
+                    window.location = "/";
+                },
+                error: function () {
+                    console.log(
+                        "\n---------------------------\nAJAX Error: Unable to send Student List\n---------------------------\n"
+                    );
+                }
 
-        });
-    }
-</script>
+            });
+        }
+    </script>
 
 </body>
 

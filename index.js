@@ -75,7 +75,10 @@ app.get('/', function(req, res) {
         res.redirect('/dashboard');
     }
 
-    res.render('home');
+    else 
+    {
+        res.render('home');
+    }
 
 });
 
@@ -396,8 +399,17 @@ app.get('/add_test_result', function(req, res){
     
 app.post('/add_test_result', urlEncodedParser, function(req, res){
     
-    var body = req.body;
-    var query_student = "SELECT * FROM STUDENT,REGISTER WHERE TESTID = '" + body.test + "' AND STUDENT.USN = REGISTER.USN;";
+    res.redirect('/add_selected_students?test=' + req.body.test);
+    
+});
+
+//--------------------------------------------------------------------------------------------
+
+app.get('/add_selected_students', urlEncodedParser, function(req, res){
+
+    var test = req.query.test;
+    // console.log(rwq);
+    var query_student = "SELECT * FROM STUDENT,REGISTER WHERE TESTID = '" + test + "' AND STUDENT.USN = REGISTER.USN;";
     
     connection.query(query_student, function(error, result){
         if (error)
@@ -409,17 +421,49 @@ app.post('/add_test_result', urlEncodedParser, function(req, res){
         {
             //console.log("STUDENTS\n\n" + result.length);
 
-            res.render('header', {username: req.session.username}, function(err, html) {
-                res.render('addSelectedStudents', {Students: result}, function(err2, html2) {
-                    res.render('template', {header: html, body: html2});
-                });
-            });
+            // res.render('header', {username: req.session.username}, function(err, html) {
+            //     res.render('addSelectedStudents', {Students: result}, function(err2, html2) {
+            //         res.render('template', {header: html, body: html2});
+            //     });
+            // });
+            res.render('addSelectedStudents', {Students: result, username: req.session.username});
         }
-    });
+    });   
+});
+
+//--------------------------------------------------------------------------------------------    
+
+
+app.post('/add_selected_students', urlEncodedParser, function(req, res){
+    
+    console.log(req.body);
+    
+    var usnList = req.body.list.split(" ");
+    //console.log(usnList[0]);
+    var register_query = "";
+    
+    for (i = 0; i <usnList.length-1; i++) {
+        register_query += "UPDATE REGISTER SET SELECTED = 'YES' WHERE USN = '" + usnList[i] + "' AND TESTID = '" + req.body.testid + "';";
+    }
+    
+    console.log(register_query);
+    
+    connection.query(register_query, function(error, result){
+        if (error)
+        {
+            console.log("\n---------------------------\nBackend Error: Unable to update table Register to add selected students\n---------------------------\n");
+            //res.redirect('/error');
+        }
+        else
+        {
+            console.log("Success");
+            res.send({status: 200});
+        }
+    });   
 });
 
 //--------------------------------------------------------------------------------------------
-    
+
 app.post('/add_offer_students', urlEncodedParser, function(req, res){
     
     var body = req.body;
@@ -469,35 +513,6 @@ app.post('/add_offer_students', urlEncodedParser, function(req, res){
     });
 
 
-});
-
-//--------------------------------------------------------------------------------------------
-
-app.post('/add_selected_students', urlEncodedParser, function(req, res){
-    
-    //console.log(req.body);
-    
-    var usnList = req.body.list.split(" ");
-    console.log(usnList[0]);
-    var register_query = "";
-    
-    for (i = 0; i <usnList.length-1; i++) {
-        register_query += "UPDATE REGISTER SET SELECTED = 'YES' WHERE USN = '" + usnList[i] + "' AND TESTID = 13; ";
-    }
-    
-    //console.log(register_query);
-    
-    connection.query(register_query, function(error, result){
-        if (error)
-        {
-            console.log("\n---------------------------\nBackend Error: Unable to update table Register to add selected students\n---------------------------\n");
-            res.redirect('/error');
-        }
-        else
-        {
-            res.send({status: 200});
-        }
-    });   
 });
 
 //--------------------------------------------------------------------------------------------

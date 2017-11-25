@@ -16,7 +16,26 @@ module.exports =
 
         if (role == 0) //admin
         {
-            response.render('dashboardAdmin');
+            connection.query("SELECT ROLE AS ROLE, COUNT(*) AS COUNT FROM USER GROUP BY ROLE;", function(error, result){
+
+                if(error)
+                {
+                    console.log("\nBackend error: Couldn't retrieve role groups for admin dashboard\n");
+                }
+                else
+                {
+                    var i = 0;
+                    for(i=0; i < result.length; i++)
+                    {
+                        if (result[i].ROLE == 0) result[i].ROLE = "Admin";
+                        else if (result[i].ROLE == 1) result[i].ROLE = "Student";
+                        else if (result[i].ROLE == 2) result[i].ROLE = "Faculty Coordinator";
+                        else if (result[i].ROLE == 3) result[i].ROLE = "Student Placement Coordinator";
+                        else if (result[i].ROLE == 4) result[i].ROLE = "Placement Cell, RVCE";
+                    }
+                    response.render('dashboardAdmin', {Users: result});
+                }
+            });
         }
 
         else if (role == 1)

@@ -1,160 +1,129 @@
 <!DOCTYPE HTML>
 <html>
 
-<head>
-    <title> Add Test </title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <head>
+        <title> Add Test </title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <link rel="stylesheet" href="./materialize/css/materialize.min.css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-</head>
+        <link rel="stylesheet" href="./materialize/css/materialize.min.css">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    </head>
 
-<body>
+    <body>
 
-    <nav class="teal darken-2">
-        <div class="nav-wrapper container">
-            <a href="/dashboard" class="brand-logo center"> Career Portal </a>
-            <ul id="nav-mobile" class="right hide-on-med-and-down">
-                <li>
-                    <a href="">Logged in as {{username}}</a>
-                </li>
-                <li>
-                    <a href="/logout"> Logout </a>
-                </li>
-            </ul>
-            <ul id="nav-mobile" class="left hide-on-med-and-down">
-                <li>
-                    <a href="/password_change"> Change Password </a>
-                </li>
-            </ul>
-        </div>
-    </nav>
-
-    <br>
-    <br>
-    <br> {{!--
-    <section class="container center" style="margin-top: 5em">
-
-        <h3> List of Shortlisted Students </h3>
-
-        <table class="bordered highlight centered">
-            <thead>
-                <tr>
-                    <th>
-                        USN
-                    </th>
-                    <th>
-                        First Name
-                    </th>
-                    <th>
-                        Last Name
-                    </th>
-                    <th>
-                        Department
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                {{#each Students}}
-                <tr>
-                    <td> {{this.USN}} </td>
-                    <td> {{this.FirstName}} </td>
-                    <td> {{this.LastName}} </td>
-                    <td> {{this.Name}}</td>
-
-                    <td>
-                        <button class="waves-effect waves-light btn teal darken-1" onclick="addOffer(this);" name={{this.USN}}>
-                            Offered </button>
-                    </td>
-                </tr>
-                {{/each}}
-            </tbody>
-        </table>
-    </section> --}}
-
-    <div class="container">
-        <h4 style="color: teal"> Add the Selected Students </h4>
-        <br> {{#each Students}}
-        <p>
-            <input type="checkbox" id="{{this.USN}}" name="{{this.CompanyID}}" />
-            <label for="{{this.USN}}">{{this.USN}}: {{this.FirstName}} {{this.LastName}}</label>
-        </p>
-        {{/each}}
-
-
+        <nav class="teal">
+            <div class="nav-wrapper">
+                <a href="/dashboard" class="brand-logo center">Career Portal</a>
+                <a href="#" data-activates="mobile-demo" class="button-collapse">
+                    <i class="material-icons">menu</i>
+                </a>
+                <ul id="nav-mobile" class="right hide-on-med-and-down">
+                    <li>
+                        <a></a>Logged in as {{username}}</a>
+                    </li>
+                    <li>
+                        <a href="/logout">Logout</a>
+                    </li>
+                </ul>
+                <ul class="side-nav" id="mobile-demo">
+                    <li>
+                        <a href="/dashboard" class="active">Dashboard</a>
+                    </li>
+                    <li>
+                        <a href="/logout">Logout</a>
+                    </li>
+                </ul>
+                <ul id="nav-mobile" class="left hide-on-med-and-down">
+                    <li>
+                        <a href="/password_change"> Change Password </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
 
         <br>
-        
+        <br>
+        <br>
 
-        <div class="row">
-            <div class="col s3">
-                <button class="waves-effect waves-light btn teal" onclick="addOffers();" id="submit"> Continue </button>
-            </div>
-            <div class="col s3">
-                <a class="waves-effect waves-light btn teal" href="/dashboard"> Back </a>
-            </div>
 
+        <div class="container">
+            <h4 style="color: teal"> Add the Selected Students </h4>
+            <br> {{#each Students}}
+            <p>
+                <input type="checkbox" id="{{this.USN}}" name="{{this.CompanyID}}" />
+                <label for="{{this.USN}}">{{this.USN}}: {{this.FirstName}} {{this.LastName}}</label>
+            </p>
+            {{/each}}
+
+
+
+            <br>
+
+
+            <div class="row">
+                <div class="col s3">
+                    <button class="waves-effect waves-light btn teal" onclick="addOffers();" id="submit"> Continue </button>
+                </div>
+                <div class="col s3">
+                    <a class="waves-effect waves-light btn teal" href="/dashboard"> Back </a>
+                </div>
+
+            </div>
         </div>
-    </div>
 
-    <!-- Scripts -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="./materialize/js/materialize.min.js"></script>
+        <!-- Scripts -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="./materialize/js/materialize.min.js"></script>
 
-    <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script> -->
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script>
+        <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script> -->
+        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script>
 
 
-    <script>
-        $.validate({
-            modules: 'security'
-        });
-
-        $(document).ready(function () {
-            $('select').material_select();
-        });
-    </script>
-
-    <script>
-        function addOffers() {
-
-            //console.log("Called");
-            var studentList = "";
-            var arr = [];
-            var CompanyID;
-            $('input[type="checkbox"]').filter(':checked').each(
-                function () {
-                    studentList += this.id + " ";
-                    CompanyID = this.name;
-                }
-            );
-
-            //arr.push(studentList);
-
-            $.ajax({
-                type: "POST",
-                url: "/add_offer_students",
-                //contentType: "json",
-                dataType: "json",
-                data: {
-                    list: studentList,
-                    company: CompanyID
-                },
-                success: function () {
-                    //console.log("AJAX done");
-                    window.location = "/dashboard";
-                },
-                error: function () {
-                    console.log(
-                        "\n---------------------------\nAJAX Error: Unable to send Student List\n---------------------------\n"
-                    );
-                }
-
+        <script>
+            $.validate({
+                modules: 'security'
             });
-        }
-    </script>
 
-</body>
+            $(document).ready(function () {
+                $('select').material_select();
+            });
+        </script>
+
+        <script>
+            function addOffers() {
+
+                var studentList = "";
+                var arr = [];
+                var CompanyID;
+                $('input[type="checkbox"]').filter(':checked').each(
+                    function () {
+                        studentList += this.id + " ";
+                        CompanyID = this.name;
+                    }
+                );
+
+                //arr.push(studentList);
+
+                $.ajax({
+                    type: "POST",
+                    url: "/add_offer_students",
+                    dataType: "json",
+                    data: {
+                        list: studentList,
+                        company: CompanyID
+                    },
+                    success: function () {
+                        window.location = "/dashboard"
+                    },
+                    error: function () {
+                        console.log(
+                            "\n---------------------------\nAJAX Error: Unable to send Student List\n---------------------------\n"
+                        );
+                    }
+                });
+            }
+        </script>
+    </body>
 
 </html>
