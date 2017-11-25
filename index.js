@@ -409,8 +409,9 @@ app.get('/add_selected_students', urlEncodedParser, function(req, res){
 
     var test = req.query.test;
     // console.log(rwq);
-    var query_student = "SELECT * FROM STUDENT,REGISTER WHERE TESTID = '" + test + "' AND STUDENT.USN = REGISTER.USN;";
+    var query_student = "SELECT * FROM STUDENT,REGISTER WHERE TESTID = '" + test + "' AND STUDENT.USN = REGISTER.USN AND STUDENT.DEPARTMENT IN (SELECT DEPARTMENTID FROM SPC WHERE USERNAME = '" + req.session.username + "');";
     
+    console.log(query_student);
     connection.query(query_student, function(error, result){
         if (error)
         {
@@ -770,23 +771,32 @@ app.post('/add_new_user', urlEncodedParser, function(req, res)
 
 app.get('/test', function(req, res) {
 
-    var query = "SELECT * FROM REGISTER, STUDENT WHERE TESTID = " + req.query.id + " AND REGISTER.USN = STUDENT.USN";
-    var query2 = "SELECT * FROM TEST, COMPANY WHERE TEST.TESTID = " + req.query.id + " AND TEST.COMPANYID = COMPANY.COMPANYID;";
-    var query3 = "SELECT * FROM REGISTER, STUDENT WHERE TESTID = " + req.query.id + " AND REGISTER.USN = STUDENT.USN AND REGISTER.SELECTED = 'YES';";
-    connection.query(query, function(err, result1) {
-        
-        connection.query(query2, function(err2, result2) {
+    if(req.session.username && req.session.role != 1)
+    {
 
-            connection.query(query3, function(err3, result3){
+        var query = "SELECT * FROM REGISTER, STUDENT WHERE TESTID = " + req.query.id + " AND REGISTER.USN = STUDENT.USN AND STUDENT.DEPARTMENT IN (SELECT DEPARTMENTID FROM SPC WHERE USERNAME = '" + req.session.username + "');";
+        var query2 = "SELECT * FROM TEST, COMPANY WHERE TEST.TESTID = " + req.query.id + " AND TEST.COMPANYID = COMPANY.COMPANYID;";
+        var query3 = "SELECT * FROM REGISTER, STUDENT WHERE TESTID = " + req.query.id + " AND REGISTER.USN = STUDENT.USN AND REGISTER.SELECTED = 'YES' AND STUDENT.DEPARTMENT IN (SELECT DEPARTMENTID FROM SPC WHERE USERNAME = '" + req.session.username + "');";
+        
+        connection.query(query, function(err, result1) {
             
-                res.render('header', {username: req.session.username}, function(err, html) {
-                    res.render('test', {Test: result2, Reg: result1, Selected: result3}, function(err2, html2) {
-                        res.render('template', {header: html, body: html2});
+            connection.query(query2, function(err2, result2) {
+
+                connection.query(query3, function(err3, result3){
+                
+                    res.render('header', {username: req.session.username}, function(err, html) {
+                        res.render('test', {Test: result2, Reg: result1, Selected: result3}, function(err2, html2) {
+                            res.render('template', {header: html, body: html2});
+                        });
                     });
                 });
             });
         });
-    });
+    }
+    else
+    {
+        res.redirect('/');
+    }
 });
 
 app.get('/offer', function(req, res) {
