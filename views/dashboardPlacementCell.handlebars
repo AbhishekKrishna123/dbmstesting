@@ -72,21 +72,20 @@
     <section class = "container">
         <div class="row">
         {{#each Tests}}
-        <div class="col s12 m6 l4">
-          <div class="card blue-grey darken-1">
-            <div class="card-content white-text">
-              <span class="card-title">{{this.Name}}</span>
-              <p> Conducted by: {{this.CompanyName}} </p>
-              <p> On: {{this.TestDate}} at {{this.TestTime}} </p>
+            <div class="col s12 m6 l4">
+                <div class="card blue-grey darken-1">
+                    <div class="card-content white-text">
+                        <span class="card-title">{{this.Name}}</span>
+                        <p> Conducted by: {{this.CompanyName}} </p>
+                        <p> On: {{this.TestDate}} at {{this.TestTime}} </p>
+                    </div>
+                    <div class="card-action">
+                        <a href="/test?id={{this.TestID}}"> View Details </a>
+                    </div>
+                </div>
             </div>
-            <div class="card-action">
-              <a href="/test?id={{this.TestID}}"> View Details </a>
-            </div>
-          </div>
-        </div>
-        
         {{/each}}
-      </div>
+        </div>
     </section>
 
     <section class="container" style="margin-top: 5em">
@@ -103,24 +102,19 @@
             {{!-- <div class="col s12 m6 l3">
                 <a class="waves-effect waves-light btn teal" href="/password_change"> Change Password </a>
             </div> --}}
-            
+
         </div>
 
     </section>
 
-    
-
     <br>
     <br>
 
-    <script src="js/vendor/modernizr-3.5.0.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-        crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="./materialize/js/materialize.min.js"></script>
     <script>
-        window.jQuery || document.write('<script src="js/vendor/jquery-3.2.1.min.js"><\/script>')
+        $(".button-collapse").sideNav();
     </script>
-    <script src="js/plugins.js"></script>
-    <script src="js/main.js"></script>
 
 </body>
 

@@ -4,6 +4,14 @@
         <h4 class="center orange-text">Welcome <i >{{Details.FirstName}}</i>!</h4>
     </section>
 
+    {{#if Placed}}
+    <section class="container center" style="margin-top: 2em;">
+        <h5 class="green-text">Already Placed!</h5>
+        <p class="grey-text" style="margin-top: -0.5em;">You cannot register for any more tests</p>
+    </section>
+    {{/if}}
+
+
     <section class="container row" style="margin-top: 3em">
 
         <div class="container col s12 l6 center">
@@ -73,12 +81,12 @@
                         <i class="white-text">Status:</i>
                         <i style = "color: rgb(172, 172, 172)">Cannot register!</i>
                     </div>
-                    
+
                     {{!-- {{#else}} <button class="waves-effect waves-light btn grey" name = {{this.TestID}}> Inadequate GPA </button> {{/else}} --}}
                 </div>
             {{/each}}
 
-            
+
 
             <div class="divider"></div>
 
@@ -110,7 +118,7 @@
         <div class="col s12 l6" style="padding-left: 3em;">
             <h4 class="teal-text center">Here are your details</h4>
             <br>
-            <table class="bordered highlight centered responsive-table"  style = "display:block; overflow: scroll; height: 300px">
+            <table class="bordered highlight centered responsive-table"  style = "display:block; overflow-y: scroll; height: 500px">
                 <thead>
                     <tr>
                         <th>
@@ -231,7 +239,6 @@
         </div>
 
         <br>
-        {{#if Placed}} <button class="waves-effect waves-light btn grey" name = {{this.TestID}}> Already Placed </button> {{/if}}
 
     </section>
 
@@ -247,8 +254,11 @@
 
     <br><br>
 
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-        <script src="./materialize/js/materialize.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="./materialize/js/materialize.min.js"></script>
+    <script>
+        $(".button-collapse").sideNav();
+    </script>
 
         <script>
 
@@ -303,11 +313,6 @@
                     }
                 });
             }
-
-            $(document).ready(function() {
-                $(".button-collapse").sideNav();
-            });
-
         </script>
     </body>
 </html>

@@ -51,7 +51,7 @@
 			<!-- Footer -->
 				<footer id="footer">
 					<ul class="copyright">
-						<li>&copy; RVCE. All rights reserved.</li><li> Designed by Giri and Dubby </li>
+						<li>&copy; RVCE. All rights reserved.</li><li> Designed by Aditya Giridharan and Abhishek Krishna </li>
 					</ul>
 				</footer>
 
@@ -65,6 +65,19 @@
 			<script src="assets/js/util.js"></script>
 			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
 			<script src="assets/js/main.js"></script>
+
+			<script>
+
+					var state = window.location.hash;
+
+					if (state == "#wrongpw") {
+						alert("Wrong password! Try again!");
+					}
+					else if (state == "#nouser") {
+						alert("Username does not exist! Try registering as a new user.")
+					}
+
+			</script>
 
 	</body>
 </html>

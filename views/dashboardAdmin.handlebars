@@ -1,54 +1,4 @@
-<!doctype html>
-<html class="no-js" lang="en">
 
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Dashboard</title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <link rel="manifest" href="site.webmanifest">
-    <link rel="apple-touch-icon" href="icon.png">
-    <!-- Place favicon.ico in the root directory -->
-
-    {{!--
-    <link rel="stylesheet" href="css/normalize.css">
-    <link rel="stylesheet" href="css/main.css"> --}}
-    <link rel="stylesheet" href="materialize/css/materialize.min.css">
-</head>
-
-<body>
-
-    <nav class="teal">
-        <div class="nav-wrapper">
-            <a href="/dashboard" class="brand-logo center">Career Portal</a>
-            <a href="#" data-activates="mobile-demo" class="button-collapse">
-                <i class="material-icons">menu</i>
-            </a>
-            <ul id="nav-mobile" class="right hide-on-med-and-down">
-                <li>
-                    <a></a>Logged in as Administrator </a>
-                </li>
-                <li>
-                    <a href="/logout">Logout</a>
-                </li>
-            </ul>
-            <ul class="side-nav" id="mobile-demo">
-                <li>
-                    <a href="/dashboard" class="active">Dashboard</a>
-                </li>
-                <li>
-                    <a href="/logout">Logout</a>
-                </li>
-            </ul>
-            <ul id="nav-mobile" class="left hide-on-med-and-down">
-                <li>
-                    <a href="/password_change"> Change Password </a>
-                </li>
-            </ul>
-        </div>
-    </nav>
     <section class="container">
         <h1>Dashboard</h1>
         <h3>Welcome Admin!</h3>
@@ -57,10 +7,10 @@
     <section class="container" style="margin-top: 5em">
 
 
-        <div class="col s12 l6" style="padding-left: 3em;">
+        <div class="col s12 l6">
             <h4 class="teal-text center"> User Count </h4>
             <br>
-            <table class="bordered highlight centered responsive-table">
+            <table class="bordered highlight centered">
                 <thead>
                     <tr>
                         <th>
@@ -100,16 +50,11 @@
     <br>
     <br>
 
-    <script src="materialize/js/materialize.js"></script>
-    <script src="js/vendor/modernizr-3.5.0.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-        crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="./materialize/js/materialize.min.js"></script>
     <script>
-        window.jQuery || document.write('<script src="js/vendor/jquery-3.2.1.min.js"><\/script>')
+        $(".button-collapse").sideNav();
     </script>
-    <script src="js/plugins.js"></script>
-    <script src="js/main.js"></script>
-
 </body>
 
 </html>

@@ -33,15 +33,28 @@ module.exports =
                         else if (result[i].ROLE == 3) result[i].ROLE = "Student Placement Coordinator";
                         else if (result[i].ROLE == 4) result[i].ROLE = "Placement Cell, RVCE";
                     }
-                    response.render('dashboardAdmin', {Users: result});
+                    //response.render('dashboardAdmin', {Users: result});
+
+                    response.render('dashboardAdmin', {
+                        Users: result
+                    }, function(err1, html1){
+                        response.render('header', {
+                            username: req.session.username,
+                        }, function(err2, html2) {
+                            response.render('template', {
+                                header: html2,
+                                body: html1
+                            });
+                        });
+                    });
                 }
             });
         }
 
         else if (role == 1)
         {
-            var student_details_query = "SELECT * FROM STUDENT WHERE USN = '" + req.session.username + "'" ; 
-            
+            var student_details_query = "SELECT * FROM STUDENT WHERE USN = '" + req.session.username + "'" ;
+
             connection.query(student_details_query, function(err, res, fields){
 
                 var date= new Date();
@@ -52,33 +65,33 @@ module.exports =
                     console.log("\n---------------------------\nDashboard / Backend Error: Unable to retrieve student details\n---------------------------\n");
                 }
 
-                if(res.length == 0) 
+                if(res.length == 0)
                 {
                     console.log("\n---------------------------\nDashboard Error: USN doesn't match Username\n---------------------------\n");
                     response.redirect('/error');
                 }
-                
-                else 
+
+                else
                 {
                     if(res[0].Placed != "Yes")
                     {
-                        var testq_reg = "SELECT * FROM TEST, COMPANY WHERE CUTOFFGPA <=  " + res[0].CGPA + 
-                        " AND TEST.TESTID IN (SELECT TESTID FROM ELIGIBLEDEPARTMENTS WHERE DEPARTMENTID = '" + dept + 
-                        "') AND TEST.TESTID IN (SELECT TESTID FROM REGISTER WHERE REGISTER.USN = '" + 
+                        var testq_reg = "SELECT * FROM TEST, COMPANY WHERE CUTOFFGPA <=  " + res[0].CGPA +
+                        " AND TEST.TESTID IN (SELECT TESTID FROM ELIGIBLEDEPARTMENTS WHERE DEPARTMENTID = '" + dept +
+                        "') AND TEST.TESTID IN (SELECT TESTID FROM REGISTER WHERE REGISTER.USN = '" +
                         req.session.username + "') AND TEST.COMPANYID = COMPANY.COMPANYID AND TESTDATE >= '" + currentDate + "'";
 
                         connection.query(testq_reg, function(error_reg, result_reg){
-                            
+
                             if (error_reg)
                             {
                                 throw error_reg;
                             }
-                            
+
                             else
                             {
-                                var testq_notreg = "SELECT * FROM TEST, COMPANY WHERE CUTOFFGPA <=  " + res[0].CGPA + 
-                                " AND TEST.TESTID IN (SELECT TESTID FROM ELIGIBLEDEPARTMENTS WHERE DEPARTMENTID = '" + dept + 
-                                "') AND TEST.TESTID NOT IN (SELECT TESTID FROM REGISTER WHERE REGISTER.USN = '" + 
+                                var testq_notreg = "SELECT * FROM TEST, COMPANY WHERE CUTOFFGPA <=  " + res[0].CGPA +
+                                " AND TEST.TESTID IN (SELECT TESTID FROM ELIGIBLEDEPARTMENTS WHERE DEPARTMENTID = '" + dept +
+                                "') AND TEST.TESTID NOT IN (SELECT TESTID FROM REGISTER WHERE REGISTER.USN = '" +
                                 req.session.username + "') AND TEST.COMPANYID = COMPANY.COMPANYID AND TESTDATE >= '" + currentDate + "'";
 
                                 connection.query(testq_notreg, function(error_notreg, result_notreg){
@@ -89,8 +102,8 @@ module.exports =
 
                                     else
                                     {
-                                        var testq_notelig = "SELECT * FROM TEST, COMPANY WHERE CUTOFFGPA >  " + res[0].CGPA + 
-                                        " AND TEST.TESTID IN (SELECT TESTID FROM ELIGIBLEDEPARTMENTS WHERE DEPARTMENTID = '" + dept + 
+                                        var testq_notelig = "SELECT * FROM TEST, COMPANY WHERE CUTOFFGPA >  " + res[0].CGPA +
+                                        " AND TEST.TESTID IN (SELECT TESTID FROM ELIGIBLEDEPARTMENTS WHERE DEPARTMENTID = '" + dept +
                                         "') AND TEST.CompanyID = COMPANY.CompanyID AND TESTDATE >= '" + currentDate + "'";
 
                                         connection.query(testq_notelig, function(error_notelig, result_notelig){
@@ -102,7 +115,7 @@ module.exports =
                                             else
                                             {
 
-                                                var testq_old = "SELECT * FROM COMPANY, TEST LEFT JOIN REGISTER ON TEST.TESTID = REGISTER.TESTID AND REGISTER.USN = '" + 
+                                                var testq_old = "SELECT * FROM COMPANY, TEST LEFT JOIN REGISTER ON TEST.TESTID = REGISTER.TESTID AND REGISTER.USN = '" +
                                                 req.session.username + "'" +  " WHERE TESTDATE < '" + currentDate + "'" +
                                                 " AND COMPANY.COMPANYID = TEST.COMPANYID;";
 
@@ -148,7 +161,7 @@ module.exports =
                             {
 
                                 connection.query("SELECT * FROM COMPANY, TEST WHERE COMPANY.COMPANYID = TEST.COMPANYID AND TEST.TESTDATE < '" + currentDate + "';", function(err2, res2){
-                                    
+
                                     if (err2)
                                     {
                                         console.log("\nBackend Error: Couldn't retrieve old tests\n");
@@ -156,7 +169,7 @@ module.exports =
 
                                     else
                                     {
-                                    
+
                                         response.render('dashboardStu', {
                                             Details: res[0],
                                             Department: dept,
@@ -178,7 +191,7 @@ module.exports =
                                     }
                                 });
                             }
-                            
+
                         });
                     }
                 }
@@ -191,18 +204,18 @@ module.exports =
 
             connection.query(faculty_details_query, function(err, res, fields){
 
-                if(res.length == 0) 
+                if(res.length == 0)
                 {
                     console.log("\n---------------------------\nDashboard Error: Couldn't retrieve faculty details\n---------------------------\n");
                     response.redirect('/logout');
-                } 
-                
-                else 
+                }
+
+                else
                 {
                     var dept;
 
-                    var dept_details_query = "SELECT * FROM DEPARTMENT WHERE DEPARTMENTID = '" + res[0].DepartmentID + "';" ; 
-                    
+                    var dept_details_query = "SELECT * FROM DEPARTMENT WHERE DEPARTMENTID = '" + res[0].DepartmentID + "';" ;
+
                     connection.query(dept_details_query, function(errid, resid){
 
                         if(errid)
@@ -210,7 +223,7 @@ module.exports =
                             throw errid;
                         }
 
-                        else 
+                        else
                         {
                             dept = resid[0].Name;
                             var test_query = "SELECT * FROM TEST, COMPANY WHERE TEST.TESTID IN (SELECT TESTID FROM ELIGIBLEDEPARTMENTS WHERE DEPARTMENTID = " + res[0].DepartmentID + ") AND TEST.CompanyID = COMPANY.CompanyID ;";
@@ -259,11 +272,11 @@ module.exports =
                     console.log("\n---------------------------\nBackend Error: Unable to retrieve spc details for dashboard\n---------------------------\n")
                 }
 
-                else 
+                else
                 {
                     var dept;
 
-                    var dept_details_query = "SELECT * FROM DEPARTMENT WHERE DEPARTMENTID = '" + result[0].DepartmentID + "';" ; 
+                    var dept_details_query = "SELECT * FROM DEPARTMENT WHERE DEPARTMENTID = '" + result[0].DepartmentID + "';" ;
                     connection.query(dept_details_query, function(errid, resid){
 
                         if(errid)
@@ -319,7 +332,7 @@ module.exports =
                 {
                     response.render('dashboardPlacementCell', {Tests: result});
                 }
-            });  
+            });
         }
     }
 }

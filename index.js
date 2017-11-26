@@ -75,7 +75,7 @@ app.get('/', function(req, res) {
         res.redirect('/dashboard');
     }
 
-    else 
+    else
     {
         res.render('home');
     }
@@ -95,12 +95,12 @@ app.post('/login', urlEncodedParser, function(request, response){
 
 app.get('/dashboard', function(req, res) {
 
-    if (req.session.username) 
+    if (req.session.username)
     {
         if(req.session.username[0] == '1')
         {
             var dept_query = "SELECT * FROM DEPARTMENT WHERE DEPARTMENTID IN (SELECT DEPARTMENT FROM STUDENT WHERE USN = '" + req.session.username + "');";
-            
+
             connection.query(dept_query, function(error, result){
                 if(error)
                 {
@@ -122,7 +122,7 @@ app.get('/dashboard', function(req, res) {
         }
     }
 
-    else 
+    else
     {
         res.redirect('/');
     }
@@ -141,11 +141,11 @@ app.get('/error', function(req, res){
 
 app.get('/password_change', function (req, res){
 
-    if (req.session.username) 
+    if (req.session.username)
     {
         res.render('passwordChange', {username: req.session.username});
     }
-    else 
+    else
     {
         res.redirect('/');
     }
@@ -164,17 +164,17 @@ app.post('/password_change', urlEncodedParser, function (req, res){
 //--------------------------------------------------------------------------------------------
 
 app.get('/password_change_success', function (req, res){
-    
+
     res.render('passwordChangeSuccess');
 });
-    
+
 //--------------------------------------------------------------------------------------------
 
 app.get('/password_change_fail', function (req, res){
-    
+
     res.render('passwordChangeFail');
 });
-    
+
 //--------------------------------------------------------------------------------------------
 
 app.get('/logout', function(req, res)
@@ -184,13 +184,13 @@ app.get('/logout', function(req, res)
         req.session.destroy();
         res.redirect('/');
     }
-    
+
     else
     {
-         res.redirect('/');
+        res.redirect('/');
     }
-    
-});     
+
+});
 
 /* --------------------------------------------------------------------------------------------------------------------- */
 
@@ -227,22 +227,22 @@ app.post('/register', urlEncodedParser, function(req, res){
 //--------------------------------------------------------------------------------------------
 
 app.post('/test_register', urlEncodedParser, function(req, res){
-    
+
     var body = req.body;
-    
+
     var insertVals =
     {
         USN: req.session.username,
         TestID: body.ID
     }
-    
+
     connection.query("INSERT INTO REGISTER SET ?", insertVals, function(error, result){
         if(error)
         {
             console.log("\n---------------------------\nBackend Error: Unable to insert into table Register\n---------------------------\n");
             res.redirect('/error');
         }
-    
+
         else
         {
             res.send({status: 200});
@@ -251,11 +251,11 @@ app.post('/test_register', urlEncodedParser, function(req, res){
 });
 
 //--------------------------------------------------------------------------------------------
-    
+
 app.post('/test_unregister', urlEncodedParser, function(req, res)
 {
     var delete_query = "DELETE FROM REGISTER WHERE USN = '" + req.session.username + "' AND TESTID = '" + req.body.ID + "';";
-    
+
     connection.query(delete_query, function(error, result)
     {
         if(error)
@@ -295,11 +295,11 @@ app.get('/add_company_test', function(req, res){
             }
 
             //console.log(companyNames);
-            
+
             connection.query("SELECT * FROM DEPARTMENT", function(error2, result2){
-                
+
                 //console.log(result2[0]);
-                
+
                 res.render('header', {username: req.session.username}, function(err1, html1) {
                     res.render('addCompanyTest', {Companies: companyNames, Departments: result2}, function(err2, html2) {
                         res.render('template', { header: html1 , body:html2 })
@@ -327,7 +327,7 @@ app.post('/add_company_test', urlEncodedParser, function(req, res){
     //console.log("FORM CNAME = " + companyName);
     var company_details_query = "SELECT * FROM COMPANY WHERE COMPANYNAME LIKE '" + companyName + "%';" ;
     connection.query(company_details_query, function(error, result){
-        
+
         if (error)
         {
             console.log("\n---------------------------\nBackend Error: Unable to retrieve company details from table Company\n---------------------------\n");
@@ -371,11 +371,11 @@ app.get('/add_test_result', function(req, res){
     {
         var date= new Date();
         var currentDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
-        
+
         var query_test = "SELECT * FROM TEST WHERE TESTDATE < '" + currentDate + "';";
 
         //console.log(currentDate);
-        
+
         connection.query(query_test, function(error, result){
             if (error)
             {
@@ -396,11 +396,11 @@ app.get('/add_test_result', function(req, res){
 });
 
 //--------------------------------------------------------------------------------------------
-    
+
 app.post('/add_test_result', urlEncodedParser, function(req, res){
-    
+
     res.redirect('/add_selected_students?test=' + req.body.test);
-    
+
 });
 
 //--------------------------------------------------------------------------------------------
@@ -409,8 +409,8 @@ app.get('/add_selected_students', urlEncodedParser, function(req, res){
 
     var test = req.query.test;
     // console.log(rwq);
-    var query_student = "SELECT * FROM STUDENT,REGISTER WHERE TESTID = '" + test + "' AND STUDENT.USN = REGISTER.USN AND STUDENT.DEPARTMENT IN (SELECT DEPARTMENTID FROM SPC WHERE USERNAME = '" + req.session.username + "');";
-    
+    var query_student = "SELECT * FROM STUDENT,REGISTER WHERE TESTID = '" + test + "' AND STUDENT.USN = REGISTER.USN AND STUDENT.DEPARTMENT IN (SELECT DEPARTMENTID FROM SPC WHERE USERNAME = '" + req.session.username + "' AND STUDENT.PLACED = );";
+
     console.log(query_student);
     connection.query(query_student, function(error, result){
         if (error)
@@ -429,26 +429,26 @@ app.get('/add_selected_students', urlEncodedParser, function(req, res){
             // });
             res.render('addSelectedStudents', {Students: result, username: req.session.username});
         }
-    });   
+    });
 });
 
-//--------------------------------------------------------------------------------------------    
+//--------------------------------------------------------------------------------------------
 
 
 app.post('/add_selected_students', urlEncodedParser, function(req, res){
-    
+
     console.log(req.body);
-    
+
     var usnList = req.body.list.split(" ");
     //console.log(usnList[0]);
     var register_query = "";
-    
+
     for (i = 0; i <usnList.length-1; i++) {
         register_query += "UPDATE REGISTER SET SELECTED = 'YES' WHERE USN = '" + usnList[i] + "' AND TESTID = '" + req.body.testid + "';";
     }
-    
+
     console.log(register_query);
-    
+
     connection.query(register_query, function(error, result){
         if (error)
         {
@@ -460,13 +460,13 @@ app.post('/add_selected_students', urlEncodedParser, function(req, res){
             console.log("Success");
             res.send({status: 200});
         }
-    });   
+    });
 });
 
 //--------------------------------------------------------------------------------------------
 
 app.post('/add_offer_students', urlEncodedParser, function(req, res){
-    
+
     var body = req.body;
     // console.log(body);
     var list = body.list.split(" ");
@@ -479,7 +479,7 @@ app.post('/add_offer_students', urlEncodedParser, function(req, res){
 
     var insert_query = "";
 
-    
+
 
     for (i = 0; i <list.length-1; i++) {
         insert_query += "INSERT INTO OFFER (USN, COMPANYID) VALUES ('" + list[i] + "', '" + company + "');";
@@ -539,11 +539,11 @@ app.get('/add_offer', function(req, res){
 //--------------------------------------------------------------------------------------------
 
 app.post('/add_offer', urlEncodedParser, function(req, res){
-    
+
     var body = req.body;
     //console.log(body.company);
     var query = "SELECT * FROM DEPARTMENT, REGISTER, COMPANY, TEST, STUDENT WHERE COMPANY.COMPANYID = '" + body.company +
-    "' AND TEST.COMPANYID = '" + body.company + "' AND REGISTER.TESTID = TEST.TESTID AND REGISTER.USN = STUDENT.USN" + 
+    "' AND TEST.COMPANYID = '" + body.company + "' AND REGISTER.TESTID = TEST.TESTID AND REGISTER.USN = STUDENT.USN" +
     " AND REGISTER.SELECTED = 'YES' AND DEPARTMENT.DEPARTMENTID = STUDENT.DEPARTMENT AND STUDENT.PLACED = 'NO';";
 
     connection.query(query, function(err, result){
@@ -557,26 +557,26 @@ app.post('/add_offer', urlEncodedParser, function(req, res){
             //console.log(result);
             res.render('addOfferStudents', {Students: result, username: req.session.username});
         }
-    });    
+    });
 });
-    
+
 //--------------------------------------------------------------------------------------------
 
 app.get("/report", function(req, res) {
-    
+
     if(req.session.username && req.session.role != 1)
     {
         var query = "SELECT * FROM REGISTER";
 
         connection.query(query, function(err, result) {
 
-            if (err) 
+            if (err)
             {
                 console.log("\n---------------------------\nBackend Error: Unable to retrieve list of registered students\n---------------------------\n");
                 res.redirect('/error');
             }
-            
-            else 
+
+            else
             {
                 var workbook = new xl.Workbook();
                 var worksheet = workbook.addWorksheet('Register Report');
@@ -585,11 +585,11 @@ app.get("/report", function(req, res) {
                     { header: 'TESTID', key: 'TESTID', width: 20 },
                     { header: 'SELECTED', key: 'SELECTED', width: 20 }
                 ];
-    
+
                 for (var i=0; i<result.length; i++) {
                     worksheet.addRow([result[i].USN, result[i].TestID, result[i].Selected]);
                 }
-    
+
                 workbook.xlsx.writeFile("Report.xlsx")
                 .then(function() {
                     "File saved!";
@@ -627,7 +627,11 @@ app.get('/add_remove_users', function(req, res)
             }
             else
             {
-                res.render('addRemoveUsers', {Users: result});
+                res.render('header', {username: req.session.username}, function(err, html) {
+                    res.render('addRemoveUsers', {Users: result}, function(err2, html2) {
+                        res.render('template', {header: html, body: html2});
+                    });
+                });
             }
         });
     }
@@ -746,7 +750,7 @@ app.post('/add_new_user', urlEncodedParser, function(req, res)
                     Username: body.username
                 }
                 connection.query("INSERT INTO SPC SET ?", newInsert, function(err2, result2){
-                    
+
                     if(err2)
                     {
                         console.log("\n---------------------------\nBackend Error: Unable to insert new SPC user\n---------------------------\n");
@@ -791,17 +795,17 @@ app.get('/test', function(req, res) {
             var query3 = "SELECT * FROM REGISTER, STUDENT WHERE TESTID = " + req.query.id + " AND REGISTER.USN = STUDENT.USN AND REGISTER.SELECTED = 'YES';";
         }
 
-        
+
         var query2 = "SELECT * FROM TEST, COMPANY WHERE TEST.TESTID = " + req.query.id + " AND TEST.COMPANYID = COMPANY.COMPANYID;";
-        
-        
-        
+
+
+
         connection.query(query, function(err, result1) {
-            
+
             connection.query(query2, function(err2, result2) {
 
                 connection.query(query3, function(err3, result3){
-                
+
                     res.render('header', {username: req.session.username}, function(err, html) {
                         res.render('test', {Test: result2, Reg: result1, Selected: result3}, function(err2, html2) {
                             res.render('template', {header: html, body: html2});
@@ -820,11 +824,11 @@ app.get('/test', function(req, res) {
 app.get('/offer', function(req, res) {
     var query = "SELECT * FROM REGISTER, STUDENT WHERE TESTID = " + req.query.id + " AND REGISTER.USN = STUDENT.USN";
     var query2 = "SELECT * FROM TEST WHERE TEST.TESTID = " + req.query.id;
-    
+
     connection.query(query, function(err, result1) {
-        
+
         connection.query(query2, function(err2, result2) {
-            
+
             res.render('header', {username: req.session.username}, function(err, html) {
                 res.render('offer', {Test: result2, Reg: result1}, function(err2, html2) {
                     res.render('template', {header: html, body: html2});
@@ -832,7 +836,31 @@ app.get('/offer', function(req, res) {
             });
         });
     });
-})
+});
+
+app.get('/stats', function(req, res) {
+
+    var query1 = "SELECT CompanyName, COUNT(CompanyName) AS Num FROM TEST INNER JOIN COMPANY ON TEST.CompanyID = COMPANY.CompanyID GROUP BY COMPANY.CompanyID";
+    var query2 = "SELECT COUNT(CompanyName) AS TotalTests FROM TEST INNER JOIN COMPANY ON TEST.CompanyID = COMPANY.CompanyID";
+    var query3 = "SELECT FirstName, LastName, STUDENT.USN, CompanyName FROM OFFER INNER JOIN COMPANY ON OFFER.CompanyID = COMPANY.CompanyID INNER JOIN STUDENT ON OFFER.USN = STUDENT.USN;";
+    var query4 = "SELECT COUNT(*) AS TotalPlaced FROM OFFER;";
+    var query5 = "SELECT * FROM TEST, STUDENT, REGISTER, COMPANY WHERE TEST.TestID = REGISTER.TestID AND Test.CompanyID = Company.CompanyID AND REGISTER.USN = STUDENT.USN GROUP BY COMPANY.CompanyID";
+
+    connection.query(query1, function(err, result1) {
+        connection.query(query2, function(err, result2) {
+            connection.query(query3, function(err, result3) {
+                connection.query(query4, function(err, result4) {
+                    connection.query(query4, function(err, result4) {
+                    console.log(result4);
+                    res.render('stats', { Tests: result1, TotalTests: result2[0].TotalTests, Students: result3, TotalPlaced: result4[0].TotalPlaced });
+
+                });
+            });
+        });
+    });
+
+
+
+});
 
 app.listen(3000);
-

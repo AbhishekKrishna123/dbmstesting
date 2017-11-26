@@ -15,7 +15,7 @@ module.exports =
         var username = request.body.username;
 
         var user_query = "SELECT * FROM USER WHERE USERNAME = '" + request.body.username + "'";
-        
+
         connection.query(user_query, function(err, res, fields){
 
             if (err)
@@ -23,25 +23,25 @@ module.exports =
                 console.log("\n---------------------------\nBackend Error: Unable to get user password for login\n---------------------------\n")
             }
 
-            if(res.length == 0) 
+            if(res.length == 0)
             {
                 console.log("\n---------------------------\nLogin Error: User not found\n---------------------------\n");
-                response.redirect('/#');
-            } 
-            
-            else 
+                response.redirect('/#nouser');
+            }
+
+            else
             {
                 if(request.body.password == res[0].password)
                 {
                     request.session.username = request.body.username;
                     request.session.role = res[0].role;
                     response.redirect('/dashboard');
-                } 
-                
-                else 
+                }
+
+                else
                 {
                     console.log("\n---------------------------\nLogin Error: Wrong Password\n---------------------------\n")
-                    response.redirect("/#");
+                    response.redirect("/#wrongpw");
                 }
             }
         });
