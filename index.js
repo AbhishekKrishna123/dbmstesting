@@ -850,7 +850,7 @@ app.get('/stats', function(req, res) {
         connection.query(query2, function(err, result2) {
             connection.query(query3, function(err, result3) {
                 connection.query(query4, function(err, result4) {
-                    connection.query(query4, function(err, result4) {
+
                     console.log(result4);
                     res.render('stats', { Tests: result1, TotalTests: result2[0].TotalTests, Students: result3, TotalPlaced: result4[0].TotalPlaced });
 
